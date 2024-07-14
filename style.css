@@ -1,0 +1,15 @@
+body {
+    background-color: black;
+    color: white;
+    font-size: large;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    font-size: large;
+    border-radius: 4px;
+}
