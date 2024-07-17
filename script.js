@@ -5,6 +5,7 @@ const resetButton = document.getElementById('reset-button');
 const multiplicationControls = document.getElementById('multiplication-control-container');
 const radioButtons = document.querySelectorAll('input[name="operation"]');
 const allControlsContainer = document.getElementById('all-controls-container');
+const canvas = document.getElementById('game-canvas');
 
 startButton.addEventListener('click', onStartClicked);
 resetButton.addEventListener('click', onResetClicked);
@@ -34,6 +35,9 @@ function onStartClicked() {
 
   const operation = findSelectedOperation();
   log('selected operation:', operation);
+
+  let game = new Game(canvas, 'Player', operation);
+  game.startGame();
 }
 
 function onResetClicked() {

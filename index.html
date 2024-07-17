@@ -9,7 +9,7 @@
 <body>
 
   <div style="margin:auto; text-align:center;">The Math Game</div>
-  
+
   <div id="all-controls-container">
 
     <!-- type name -->
@@ -29,7 +29,7 @@
       <input type="radio" id="division" name="operation" value="division">
       <label for="division">Division</label>
     </div>
-  
+
     <div id="multiplication-control-container" class="hidden">
       <div class="center-container">
         <label for="term-1-min">Term 1 Min:</label>
@@ -61,7 +61,10 @@
     <button id="reset-button" class="hidden">Reset Game</button>
   </div>
 
-
+  <canvas id="game-canvas" width="1000" height="1000" background="black">
+    <p>Canvas not supported</p>
+    <p>Game rendering area</p>
+  </canvas>
 
 </body>
 <script src="utils.js"></script>
