@@ -1,14 +1,14 @@
 log('loaded game.js');
 class Game {
-  //trying to think what pieces I need for this math shooter game...
-  // questions, answers, missiles, score, time, math operation, do I also want username?
-  // the constructor probably only needs username and operation
+  
   constructor(canvas, username, operation) {
     this.canvas = canvas;
     this.username = username;
     this.operation = operation;
     this.fontSize = Math.floor(this.canvas.height / 20);
-    this.questionCoordinates = { x: canvas.width / 2, y: this.fontSize, dy: this.canvas.height / 600 };
+    // TODO: add a control to allow the user to set the speed
+    let speed = this.canvas.height * .001;
+    this.questionCoordinates = { x: canvas.width / 2, y: this.fontSize, dy: speed };
 
     this.context = this.canvas.getContext('2d');
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
