@@ -10,16 +10,14 @@
 
   <div style="margin:auto; text-align:center;">The Math Game</div>
 
-  <div id="all-controls-container">
+  <div id="all-controls-container" class="fit-content center-container">
 
-    <!-- type name -->
-    <div class="center-container">
+    <div>
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" value="Nate">
     </div>
 
-    <!-- radio buttons for 4 math operations -->
-    <div class="center-container">
+    <div>
       <input type="radio" id="addition" name="operation" value="addition" checked>
       <label for="addition">Addition</label>
       <input type="radio" id="subtraction" name="operation" value="subtraction">
@@ -30,41 +28,33 @@
       <label for="division">Division</label>
     </div>
 
-    <div id="multiplication-control-container" class="hidden">
-      <div class="center-container">
-        <label for="term-1-min">Term 1 Min:</label>
-        <input type="number" min="0" max="12" id="term-1-min" name="term-1-min" value="1">
-        <label for="term-1-max">Term 1 Max:</label>
-        <input type="number" min="0" max="12" id="term-1-max" name="term-1-max" value="10">
-      </div>
-
-      <div class="center-container">
-        <label for="term-2-min">Term 2 Min:</label>
-        <input type="number" min="0" max="12" id="term-2-min" name="term-2-min" value="1">
-        <label for="term-2-max">Term 2 Max:</label>
-        <input type="number" min="0" max="12" id="term-2-max" name="term-2-max" value="10">
-      </div>
+    <div>
+      <label for="term-1-min">Term 1 Min:</label>
+      <input type="number" min="0" max="12" id="term-1-min" name="term-1-min" value="1">
+      <label for="term-1-max">Term 1 Max:</label>
+      <input type="number" min="0" max="12" id="term-1-max" name="term-1-max" value="10">
     </div>
 
-    <div id="addition-control-container">
-      <div class="center-container">
-        <label for="max-value">Max Value:</label>
-        <input type="number" min="0" max="100" id="max-value" name="max-value" value="20">
-      </div>
+    <div>
+      <label for="term-2-min">Term 2 Min:</label>
+      <input type="number" min="0" max="12" id="term-2-min" name="term-2-min" value="1">
+      <label for="term-2-max">Term 2 Max:</label>
+      <input type="number" min="0" max="12" id="term-2-max" name="term-2-max" value="10">
+    </div>
+
+    <div>
+      <button id="start-button">Start Game</button>
+      <button id="reset-button">Reset Game</button>
     </div>
 
   </div>
 
-
-  <div class="center-container">
-    <button id="start-button">Start Game</button>
-    <button id="reset-button" class="hidden">Reset Game</button>
+  <div>
+    <canvas id="game-canvas" width="200px" height="200px" background="black" style="border:white solid 1px">
+      <p>Canvas not supported</p>
+      <p>Game rendering area</p>
+    </canvas>
   </div>
-
-  <canvas id="game-canvas" width="1000" height="1000" background="black">
-    <p>Canvas not supported</p>
-    <p>Game rendering area</p>
-  </canvas>
 
 </body>
 <script src="utils.js"></script>

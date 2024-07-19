@@ -1,9 +1,9 @@
 body {
-  background-color: black;
+  background-color: hsl(0, 0%, 12%);
+  font-size: large;
 }
 
 * {
-  font-size: large;
   font-family: Arial, sans-serif;
   color: white;
 }
@@ -19,17 +19,8 @@ button:disabled {
   border-color: gray;
 }
 
-.center-container {
-  position: relative;
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: fit-content;
-}
-
 input {
+  font-size: 100%;
   background-color: black;
   color: white;
 }
@@ -38,6 +29,6 @@ input[type="number"] {
   width: 5ch;
 }
 
-.hidden {
-  display: none;
+.white-border {
+  border: 1px solid white;
 }

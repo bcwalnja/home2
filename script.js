@@ -1,56 +1,62 @@
 log('loaded script.js');
-const additionControls = document.getElementById('addition-control-container');
-const startButton = document.getElementById('start-button');
-const resetButton = document.getElementById('reset-button');
-const multiplicationControls = document.getElementById('multiplication-control-container');
-const radioButtons = document.querySelectorAll('input[name="operation"]');
-const allControlsContainer = document.getElementById('all-controls-container');
-const canvas = document.getElementById('game-canvas');
+additionControls = document.getElementById('addition-control-container');
+startButton = document.getElementById('start-button');
+resetButton = document.getElementById('reset-button');
+multiplicationControls = document.getElementById('multiplication-control-container');
+radioButtons = document.querySelectorAll('input[name="operation"]');
+allControlsContainer = document.getElementById('all-controls-container');
+canvas = document.getElementById('game-canvas');
+game = null;
 
-startButton.addEventListener('click', onStartClicked);
-resetButton.addEventListener('click', onResetClicked);
+const init = () => {
+  this.startButton.addEventListener('click', onStartClicked);
+  this.resetButton.addEventListener('click', onResetClicked);
+  resetButton.disabled = true;
 
-for (const radioButton of radioButtons) {
-  radioButton.addEventListener('change', onOperationChange);
+  window.addEventListener('resize', resizeCanvas);
+
+  for (const radioButton of this.radioButtons) {
+    radioButton.addEventListener('change', onOperationChange);
+  }
+
+  resizeCanvas();
 }
 
-function onOperationChange() {
+const resizeCanvas = () => {
+  this.canvas.width = this.canvas.parentElement.clientWidth;
+  this.canvas.height = window.innerHeight * .95 - this.canvas.offsetTop;
+}
+
+const onOperationChange = () => {
   const selectedOperation = findSelectedOperation();
   log('selected operation:', selectedOperation);
-
-  if (selectedOperation === 'addition' || selectedOperation === 'subtraction') {
-    show(additionControls)
-    hide(multiplicationControls)
-  } else {
-    hide(additionControls)
-    show(multiplicationControls)
-  }
 }
 
-function onStartClicked() {
+const onStartClicked = () => {
   console.log('Start button was clicked!');
-  hide(startButton)
-  hide(allControlsContainer)
-  show(resetButton)
+  startButton.disabled = true;
+  resetButton.disabled = false;
 
   const operation = findSelectedOperation();
   log('selected operation:', operation);
 
-  let game = new Game(canvas, 'Player', operation);
+  game = new Game(canvas, 'Player', operation);
   game.startGame();
 }
 
-function onResetClicked() {
+const onResetClicked = () => {
   console.log('Reset button was clicked!');
-  show(startButton)
-  show(allControlsContainer)
-  hide(resetButton)
+  startButton.disabled = false;
+  resetButton.disabled = true;
+  game?.dispose();
 }
 
-function findSelectedOperation() {
+const findSelectedOperation = () => {
   for (const operation of radioButtons) {
     if (operation.checked) {
       return operation.value;
     }
   }
 }
+
+init();
