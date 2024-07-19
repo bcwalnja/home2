@@ -4,18 +4,26 @@ startButton = document.getElementById('start-button');
 resetButton = document.getElementById('reset-button');
 multiplicationControls = document.getElementById('multiplication-control-container');
 radioButtons = document.querySelectorAll('input[name="operation"]');
+allInputs = document.querySelectorAll('input');
 allControlsContainer = document.getElementById('all-controls-container');
 canvas = document.getElementById('game-canvas');
 game = null;
 
+// by making all the methods lambda functions, 
+// they don't have issues with 'this' keyword, 
+// 'this' will always refer to the global object
 const init = () => {
-  this.startButton.addEventListener('click', onStartClicked);
-  this.resetButton.addEventListener('click', onResetClicked);
+  startButton.addEventListener('click', onStartClicked);
+  resetButton.addEventListener('click', onResetClicked);
   resetButton.disabled = true;
+
+  for (const input of allInputs) {
+    input.disabled = false;
+  }
 
   window.addEventListener('resize', resizeCanvas);
 
-  for (const radioButton of this.radioButtons) {
+  for (const radioButton of radioButtons) {
     radioButton.addEventListener('change', onOperationChange);
   }
 
@@ -23,8 +31,8 @@ const init = () => {
 }
 
 const resizeCanvas = () => {
-  this.canvas.width = this.canvas.parentElement.clientWidth;
-  this.canvas.height = window.innerHeight * .95 - this.canvas.offsetTop;
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = window.innerHeight * .95 - canvas.offsetTop;
 }
 
 const onOperationChange = () => {
@@ -36,6 +44,9 @@ const onStartClicked = () => {
   console.log('Start button was clicked!');
   startButton.disabled = true;
   resetButton.disabled = false;
+  for (const input of allInputs) {
+    input.disabled = true;
+  }
 
   const operation = findSelectedOperation();
   log('selected operation:', operation);
@@ -48,6 +59,9 @@ const onResetClicked = () => {
   console.log('Reset button was clicked!');
   startButton.disabled = false;
   resetButton.disabled = true;
+  for (const input of allInputs) {
+    input.disabled = false;
+  }
   game?.dispose();
 }
 
