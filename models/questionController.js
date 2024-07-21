@@ -1,5 +1,6 @@
 class QuestionController {
   questions = {};
+  correctAnswer = 0;
 
   constructor(operation, term1Min, term1Max, term2Min, term2Max) {
     this.operation = operation;
@@ -48,11 +49,13 @@ class QuestionController {
       default:
         throw new Error('Invalid operation: ' + this.operation);
     }
+
     q1.x = x;
     q1.y = y;
     q1.dx = 0;
     q1.dy = dy;
     q1.complete = false;
+    this.correctAnswer = q1.answer;
     this.questions[q1.id] = q1;
 
     return q1;

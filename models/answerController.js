@@ -40,8 +40,8 @@ class AnswerController {
 
     this.answers = [a1, a2, a3, a4];
 
-    if (!a.some(x => x.text == correctAnswer)) {
-      a[rand(0, 3)].text = correctAnswer;
+    if (!this.answers.some(x => x.text == correctAnswer)) {
+      this.answers[rand(0, 3)].text = correctAnswer;
     }
   }
 

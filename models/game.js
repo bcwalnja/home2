@@ -29,7 +29,7 @@ class Game {
 
     //generate new answers
     this.answerController = new AnswerController(this.operation, 1, 10, 1, 10);
-    this.answerController.generateNewAnswers(this.canvas, this.questionController.questions['0'].answer);
+    this.answerController.generateNewAnswers(this.canvas, this.questionController.correctAnswer);
 
     this.animate();
   }
