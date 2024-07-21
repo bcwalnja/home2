@@ -1,7 +1,7 @@
 log('loaded game.js');
 class Game {
   
-  constructor(canvas, username, operation) {
+  constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
     this.canvas = canvas;
     this.username = username;
     this.operation = operation;
@@ -27,6 +27,10 @@ class Game {
     this.questionController = new QuestionController(this.operation, 1, 10, 1, 10);
     this.questionController.generateNewQuestion(this.questionCoordinates);
 
+    //generate new answers
+    this.answerController = new AnswerController(this.operation, 1, 10, 1, 10);
+    this.answerController.generateNewAnswers(this.canvas, this.questionController.questions['0'].answer);
+
     this.animate();
   }
 
@@ -38,6 +42,7 @@ class Game {
     }
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.questionController.renderQuestions(this.context);
+    this.answerController.renderAnswers(this.context);
     requestAnimationFrame(this.animate.bind(this));
   }
 

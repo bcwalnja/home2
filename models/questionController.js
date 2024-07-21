@@ -1,8 +1,6 @@
 class QuestionController {
   questions = {};
 
-  // constructor needs to know the operation and 
-  // the factor parameters term 1 min and max and term 2 min and max
   constructor(operation, term1Min, term1Max, term2Min, term2Max) {
     this.operation = operation;
     this.term1Min = term1Min;

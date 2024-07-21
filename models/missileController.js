@@ -16,13 +16,20 @@ class MissileController {
   padding
   missiles = []
 
-  addMissile({ text, x, y }, target) {
+  addMissile(source, target) {
+    const { text, x, y } = source;
+    const { x: targetX, y: targetY } = target;
+    
     const missile = new Missile()
     missile.text = text
     missile.x = x
     missile.y = y
     // TODO: decide on the physics of the environment, 
     // and then calculate the dx and dy values
+    
+    // temporary values:
+    missile.dx = (targetX - x) / 100
+    missile.dy = (targetY - y) / 100
     
     this.missiles.push(missile)
   }
