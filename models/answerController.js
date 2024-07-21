@@ -27,7 +27,7 @@ class AnswerController {
         this.additionAnswers(a1, a2, a3, a4);
         break;
       default:
-        this.subtractionAnswers(a1, a2, a3, a4);
+        this.subtractionAnswers(a1, a2, a3, a4, correctAnswer);
         break;
     }
 
@@ -96,16 +96,18 @@ class AnswerController {
     } while (a1.text == a4.text || a2.text == a4.text || a3.text == a4.text);
   }
 
-  subtractionAnswers(a1, a2, a3, a4) {
-    a1.text = rand(0, this.question.answer);
+  subtractionAnswers(a1, a2, a3, a4, correctAnswer) {
+    let upper = correctAnswer > 4 ? correctAnswer : 6;
+    
+    a1.text = rand(0, upper);
     do {
-      a2.text = rand(0, this.question.answer);
+      a2.text = rand(0, upper);
     } while (a1.text == a2.text);
     do {
-      a3.text = rand(0, this.question.answer);
+      a3.text = rand(0, upper);
     } while (a1.text == a3.text || a2.text == a3.text);
     do {
-      a4.text = rand(0, this.question.answer);
+      a4.text = rand(0, upper);
     } while (a1.text == a4.text || a2.text == a4.text || a3.text == a4.text);
   }
 

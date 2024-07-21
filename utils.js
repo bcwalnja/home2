@@ -1,6 +1,6 @@
 log('loaded utils.js');
 /** min and max are both inclusive */
-function rand(min = 1, max = 10) {
+function rand(min, max) {
   verbose('rand');
   if (min == max) {
     return min;

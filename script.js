@@ -51,7 +51,14 @@ const onStartClicked = () => {
   const operation = findSelectedOperation();
   log('selected operation:', operation);
 
-  game = new Game(canvas, 'Player', operation);
+  //get username and term values from controls
+  let username = document.getElementById('name').value;
+  let term1min = parseInt(document.getElementById('term-1-min').value);
+  let term1max = parseInt(document.getElementById('term-1-max').value);
+  let term2min = parseInt(document.getElementById('term-2-min').value);
+  let term2max = parseInt(document.getElementById('term-2-max').value);
+
+  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max);
   game.startGame();
 }
 

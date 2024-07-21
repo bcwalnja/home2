@@ -14,6 +14,11 @@ class Game {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.font = this.fontSize + 'px Arial';
     this.context.fillStyle = 'white';
+
+    this.term1min = term1min;
+    this.term1max = term1max;
+    this.term2min = term2min;
+    this.term2max = term2max;
   }
 
   canvas;
@@ -24,11 +29,11 @@ class Game {
 
   startGame() {
     //generate a new question
-    this.questionController = new QuestionController(this.operation, 1, 10, 1, 10);
+    this.questionController = new QuestionController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.questionController.generateNewQuestion(this.questionCoordinates);
 
     //generate new answers
-    this.answerController = new AnswerController(this.operation, 1, 10, 1, 10);
+    this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.answerController.generateNewAnswers(this.canvas, this.questionController.correctAnswer);
 
     this.animate();
