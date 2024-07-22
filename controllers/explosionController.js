@@ -1,10 +1,12 @@
 class ExplosionController {
-    constructor() {
+    constructor(context) {
+        this.context = context;
         this.explosions = [];
     }
 
     createExplosion(x, y) {
-        const explosion = new Explosion(x, y);
+        log('creating explosion at:', x, y);
+        const explosion = new Explosion(this.context, x, y);
         this.explosions.push(explosion);
     }
 
@@ -17,7 +19,7 @@ class ExplosionController {
         });
     }
 
-    draw() {
+    renderExplosions() {
         this.updateExplosions();
         this.explosions.forEach(explosion => {
             explosion.draw();
@@ -26,7 +28,8 @@ class ExplosionController {
 }
 
 class Explosion {
-    constructor(x, y) {
+    constructor(context, x, y) {
+        this.context = context;
         this.x = x;
         this.y = y;
         this.size = 1;
@@ -41,10 +44,12 @@ class Explosion {
     }
 
     draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        ctx.closePath();
+        this.context.save();
+        this.context.beginPath();
+        this.context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        this.context.strokeStyle = 'red';
+        this.context.stroke();
+        this.context.closePath();
+        this.context.restore();
     }
 }

@@ -1,9 +1,18 @@
 class ClickController {
-  onClick(canvas, clickArgs, ...args) {
-    let { x, y } = clickArgs;
-    for (let arg of args) {
-      let top = canvas.fillText(arg.text, arg.x, arg.y);
-      let right = left + canvas.measureText(arg.text).width;
+  constructor (context) {
+    this.context = context;
+  }
+  
+  onClick(x, y, args) {
+    var fontSize = this.context?.font?.split('px')[0];
+    
+    for (let i = 0; i < args.length; i++) {
+      let arg = args[i];
+      let top = arg.y - fontSize;
+      let right = arg.x + this.context.measureText(arg.text).width;
+      let bottom = arg.y
+      let left = arg.x;
+
       if (x > left && x < right && y > top && y < bottom) {
         return arg;
       }
