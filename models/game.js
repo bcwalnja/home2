@@ -21,6 +21,10 @@ class Game {
     this.term2max = term2max;
   }
 
+  // on click event.. I think it has to be initialized in the script.js, and then passed to the game object
+  // and has to be called here in order to pass the answers and canvas to the clickController
+
+
   canvas;
   context;
   username;
