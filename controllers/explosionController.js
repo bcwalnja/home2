@@ -57,12 +57,11 @@ class Explosion {
     //pick the color to be the shade of red that is 
     // the percentage of the way through the explosion
     this.ratio = rand(0, 100) / 100;
+    let maxVelocity = Math.min(window.innerWidth, window.innerHeight) / 100;
 
-    function r() { return (Math.random() - 0.5) * 2 };
-
-    for (let i = 0; i < 2500; i++) {
-      var dx = Math.exp(r()) * r() * 2;
-      var dy = Math.exp(r()) * r() * 2;
+    for (let i = 0; i < 25; i++) {
+      var dx = rand(-maxVelocity, maxVelocity);
+      var dy = rand(-maxVelocity, maxVelocity);
       this.points.push({ x: x, y: y, dx: dx, dy: dy })
     }
   }

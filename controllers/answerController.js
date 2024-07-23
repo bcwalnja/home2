@@ -98,7 +98,6 @@ class AnswerController {
 
   subtractionAnswers(a1, a2, a3, a4, correctAnswer) {
     let upper = correctAnswer > 4 ? correctAnswer : 6;
-    
     a1.text = rand(0, upper);
     do {
       a2.text = rand(0, upper);

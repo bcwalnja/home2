@@ -1,6 +1,6 @@
 class QuestionController {
   questions = {};
-  correctAnswer = 0;
+  lastId = 0;
 
   constructor(operation, term1Min, term1Max, term2Min, term2Max) {
     this.operation = operation;
@@ -10,55 +10,60 @@ class QuestionController {
     this.term2Max = term2Max;
   }
 
-  getNextId() {
-    let highestNumberUsed = 0;
-    for (const key in this.questions) {
-      const question = this.questions[key];
-      const numberUsed = parseInt(question.id);
-      if (numberUsed > highestNumberUsed) {
-        highestNumberUsed = numberUsed;
+  getCorrectAnswer() {
+    for (const key of Object.keys(this.questions)) {
+      const q = this.questions[key];
+      if (q.complete) {
+        continue;
+      }
+      return q.answer;
+    }
+  }
+
+  getFocusedQuestion() {
+    for (const key of Object.keys(this.questions)) {
+      const q = this.questions[key];
+      if (q.focused) {
+        return q;
       }
     }
-    return (highestNumberUsed + 1).toString();
+  }
+
+  getNextId() {
+    return this.lastId++;
   }
 
   generateNewQuestion({ x, y, dy }) {
     log('generating a new question');
 
-    //TODO: give responsibility to the game controller
-    // // the limit of q was 2 plus the number of missiles
-    // if (q && q.length > 2 + (missiles?.length || 0)) {
-    //   return;
-    // }
-
-    var q1 = {};
-    q1.id = this.getNextId();
+    var newQ = {};
+    newQ.id = this.getNextId();
     switch (this.operation) {
       case 'multiplication':
-        this.getMultiplicationQuestion(q1);
+        this.getMultiplicationQuestion(newQ);
         break;
       case 'division':
-        this.getDivisionQuestion(q1);
+        this.getDivisionQuestion(newQ);
         break;
       case 'addition':
-        this.getAdditionQuestion(q1);
+        this.getAdditionQuestion(newQ);
         break;
       case 'subtraction':
-        this.getSubtractionQuestion(q1);
+        this.getSubtractionQuestion(newQ);
         break;
       default:
         throw new Error('Invalid operation: ' + this.operation);
     }
 
-    q1.x = x;
-    q1.y = y;
-    q1.dx = 0;
-    q1.dy = dy;
-    q1.complete = false;
-    this.correctAnswer = q1.answer;
-    this.questions[q1.id] = q1;
+    newQ.x = x;
+    newQ.y = y;
+    newQ.dx = 0;
+    newQ.dy = dy;
+    newQ.complete = false;
+    newQ.focused = true;
+    this.questions[newQ.id] = newQ;
 
-    return q1;
+    return newQ;
   }
 
   getMultiplicationQuestion(q1) {

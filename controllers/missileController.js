@@ -19,7 +19,8 @@ class MissileController {
   addMissile(source, target) {
     const { text, x, y } = source;
     const { x: targetX, y: targetY } = target;
-    
+    log('adding missile:', text, x, y, targetX, targetY);
+
     const missile = new Missile()
     missile.text = text
     missile.x = x
@@ -40,13 +41,19 @@ class MissileController {
         x.x += x.dx;
         x.y += x.dy;
       }
+
+      if (x.x < 0 || x.x > this.context.canvas.width || x.y < 0 || x.y > this.context.canvas.height) {
+        log('removing missile:', x);
+        this.missiles.splice(this.missiles.indexOf(x), 1);
+      }
       
-      this.context.fillText(x.text, x.x + padding * 2, x.y);
-      this.context.save(); // Save the current this.context state
-      this.context.translate(x.x, x.y); // Translate to the missile's position
-      this.context.rotate(-45 * Math.PI / 180); // Rotate 45 degrees to the left
-      this.context.fillText('\u{1F680}', 0, 0); // Draw the emoji at the translated and rotated position
-      this.context.restore(); // Restore the this.context to its original state
+      this.context.fillText(x.text, x.x, x.y);
+      // I used the following code to render a missile
+      // this.context.save(); // Save the current this.context state
+      // this.context.translate(x.x, x.y); // Translate to the missile's position
+      // this.context.rotate(-45 * Math.PI / 180); // Rotate 45 degrees to the left
+      // this.context.fillText('\u{1F680}', 0, 0); // Draw the emoji at the translated and rotated position
+      // this.context.restore(); // Restore the this.context to its original state
     }
   }
 }

@@ -4,7 +4,6 @@ class Game {
   constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
     this.canvas = canvas;
     this.canvas.onclick = this.onCanvasClick;
-    this.onCanvasClick.bind(this);
 
     this.username = username;
     this.operation = operation;
@@ -24,10 +23,6 @@ class Game {
     this.term2max = term2max;
   }
 
-  // on click event.. I think it has to be initialized in the script.js, and then passed to the game object
-  // and has to be called here in order to pass the answers and canvas to the clickController
-
-
   canvas;
   context;
   username;
@@ -41,19 +36,23 @@ class Game {
     log('canvas clicked at:', x, y);
     var obj = this.clickController.onClick(x, y, this.answerController.answers);
     log('clicked object:', obj);
-
+    if (obj) {
+      let source = obj;
+      let target = this.questionController.getFocusedQuestion();
+      this.missileController.addMissile(source, target);
+    }
     this.explosionController.createExplosion(x, y);
   }
-
 
   startGame() {
     this.questionController = new QuestionController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
+    this.missileController = new MissileController(this.context);
     
     this.questionController.generateNewQuestion(this.questionCoordinates);
-    this.answerController.generateNewAnswers(this.canvas, this.questionController.correctAnswer);
+    this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     this.animate();
   }
 
@@ -67,6 +66,7 @@ class Game {
     this.questionController.renderQuestions(this.context);
     this.answerController.renderAnswers(this.context);
     this.explosionController.renderExplosions();
+    this.missileController.renderMissiles();
     requestAnimationFrame(this.animate.bind(this));
   }
 
