@@ -4,6 +4,8 @@ class Game {
   constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
     this.canvas = canvas;
     this.canvas.onclick = this.onCanvasClick;
+    this.canvas.textBaseline = 'top';
+    this.canvas.textAlign = 'center';
 
     this.username = username;
     this.operation = operation;
@@ -65,11 +67,27 @@ class Game {
       return;
     }
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.handleQuestionAnswered();
+
     this.questionController.renderQuestions(this.context);
     this.answerController.renderAnswers(this.context);
     this.explosionController.renderExplosions();
     this.missileController.renderMissiles();
+
     requestAnimationFrame(this.animate.bind(this));
+  }
+
+  handleQuestionAnswered() {
+    let answeredQ = this.questionController.isQuestionAnswered(this.missileController.missiles, this.canvas);
+    if (answeredQ) {
+      log('question answered:', answeredQ);
+      this.explosionController.createExplosion(answeredQ.x, answeredQ.y);
+      this.missileController.removeMissile();
+      this.questionController.removeQuestion(answeredQ);
+      this.questionController.generateNewQuestion(this.questionCoordinates);
+      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+    }
   }
 
   dispose() {

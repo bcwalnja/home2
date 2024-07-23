@@ -11,13 +11,7 @@ class QuestionController {
   }
 
   getCorrectAnswer() {
-    for (const key of Object.keys(this.questions)) {
-      const q = this.questions[key];
-      if (q.complete) {
-        continue;
-      }
-      return q.answer;
-    }
+    return this.getFocusedQuestion().answer;
   }
 
   getFocusedQuestion() {
@@ -59,7 +53,6 @@ class QuestionController {
     newQ.y = y;
     newQ.dx = 0;
     newQ.dy = dy;
-    newQ.complete = false;
     newQ.focused = true;
     this.questions[newQ.id] = newQ;
 
@@ -97,12 +90,35 @@ class QuestionController {
   renderQuestions(context) {
     for (const key of Object.keys(this.questions)) {
       const q = this.questions[key];
-      if (q.complete) {
-        continue;
-      }
-
+      q.x += q.dx;
       q.y += q.dy;
       context.fillText(q.text, q.x, q.y);
     }
+  }
+
+  isQuestionAnswered(missiles, canvas) {
+    const padding = canvas.height * 0.02;
+    
+    for (const key of Object.keys(this.questions)) {
+      const q = this.questions[key];
+
+      if (q.y > canvas.height - 2 * 20) {
+        return q;
+      }
+
+      for (const m of missiles) {
+        if (m.x > q.x - padding &&
+          m.x < q.x + padding &&
+          m.y > q.y - padding &&
+          m.y < q.y + padding) {
+          return q;
+        }
+      }
+    }
+    return null;
+  }
+
+  removeQuestion(q) {
+    delete this.questions[q.id];
   }
 }

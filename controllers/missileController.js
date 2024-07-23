@@ -18,9 +18,9 @@ class MissileController {
 
   addMissile(source, target) {
     const { text, x, y } = source;
-    const { x: targetX, y: targetY } = target;
+    const { x: targetX, y: targetY, dx: targetdX, dy: targetdY } = target;
     log('adding missile:', text, x, y, targetX, targetY);
-
+    
     const missile = new Missile()
     missile.text = text
     missile.x = x
@@ -29,10 +29,16 @@ class MissileController {
     // and then calculate the dx and dy values
     
     // temporary values:
-    missile.dx = (targetX - x) / 100
-    missile.dy = (targetY - y) / 100
+    missile.dx = (targetX + targetdX * 100 - x) / 100
+    missile.dy = (targetY + targetdY * 100 - y) / 100
     
     this.missiles.push(missile)
+  }
+
+  removeMissile() {
+    if (this.missiles?.length) {
+      this.missiles.shift();
+    }
   }
 
   renderMissiles() {

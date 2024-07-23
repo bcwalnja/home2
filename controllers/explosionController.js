@@ -10,12 +10,6 @@ class ExplosionController {
     this.explosions.push(explosion);
   }
 
-  addExplosion(x, y) {
-    log('addExplosion');
-    let explosion = new Explosion(context, x, y);
-    this.explosions.push(explosion);
-  }
-
   removeExplosion() {
     log('removeExplosion');
     this.explosions.shift();
@@ -59,7 +53,7 @@ class Explosion {
     this.ratio = rand(0, 100) / 100;
     let maxVelocity = Math.min(window.innerWidth, window.innerHeight) / 100;
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 75; i++) {
       var dx = rand(-maxVelocity, maxVelocity);
       var dy = rand(-maxVelocity, maxVelocity);
       this.points.push({ x: x, y: y, dx: dx, dy: dy })
