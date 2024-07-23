@@ -37,7 +37,7 @@ class MissileController {
 
   renderMissiles() {
     for (const x of this.missiles) {
-      if (x.dx) {
+      if (x.dx || x.dy) {
         x.x += x.dx;
         x.y += x.dy;
       }

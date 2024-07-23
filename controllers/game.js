@@ -58,8 +58,10 @@ class Game {
 
   animate() {
     if (this.disposing) {
+      this.context.save();
       this.context.textAlign = 'center';
       this.context.fillText('Game Over', this.canvas.width / 2, this.canvas.height / 2);
+      this.context.restore();
       return;
     }
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
