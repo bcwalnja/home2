@@ -7,14 +7,15 @@ radioButtons = document.querySelectorAll('input[name="operation"]');
 allInputs = document.querySelectorAll('input');
 allControlsContainer = document.getElementById('all-controls-container');
 canvas = document.getElementById('game-canvas');
+explosionDuration = 2000;
 game = null;
 
 // by making all the methods lambda functions, 
 // they don't have issues with 'this' keyword, 
 // 'this' will always refer to the global object
 const init = () => {
-  startButton.addEventListener('click', onStartClicked);
-  resetButton.addEventListener('click', onResetClicked);
+  startButton.onclick = onStartClicked;
+  resetButton.onclick = onResetClicked;
   resetButton.disabled = true;
 
   for (const input of allInputs) {
@@ -23,21 +24,12 @@ const init = () => {
 
   window.addEventListener('resize', resizeCanvas);
 
-  for (const radioButton of radioButtons) {
-    radioButton.addEventListener('change', onOperationChange);
-  }
-
   resizeCanvas();
 }
 
 const resizeCanvas = () => {
   canvas.width = canvas.parentElement.clientWidth;
   canvas.height = window.innerHeight * .95 - canvas.offsetTop;
-}
-
-const onOperationChange = () => {
-  const selectedOperation = findSelectedOperation();
-  log('selected operation:', selectedOperation);
 }
 
 const onStartClicked = () => {

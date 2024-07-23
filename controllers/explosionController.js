@@ -1,55 +1,86 @@
 class ExplosionController {
-    constructor(context) {
-        this.context = context;
-        this.explosions = [];
-    }
+  constructor(context) {
+    this.context = context;
+    this.explosions = [];
+  }
 
-    createExplosion(x, y) {
-        log('creating explosion at:', x, y);
-        const explosion = new Explosion(this.context, x, y);
-        this.explosions.push(explosion);
-    }
+  createExplosion(x, y) {
+    log('creating explosion at:', x, y);
+    const explosion = new Explosion(this.context, x, y);
+    this.explosions.push(explosion);
+  }
 
-    updateExplosions() {
-        this.explosions.forEach((explosion, index) => {
-            explosion.update();
-            if (explosion.isFinished) {
-                this.explosions.splice(index, 1);
-            }
-        });
-    }
+  addExplosion(x, y) {
+    log('addExplosion');
+    let explosion = new Explosion(context, x, y);
+    this.explosions.push(explosion);
+  }
 
-    renderExplosions() {
-        this.updateExplosions();
-        this.explosions.forEach(explosion => {
-            explosion.draw();
-        });
-    }
+  removeExplosion() {
+    log('removeExplosion');
+    this.explosions.shift();
+  }
+
+  updateExplosions() {
+    this.explosions.forEach((explosion, index) => {
+      explosion.update();
+      if (explosion.isFinished) {
+        this.explosions.splice(index, 1);
+      }
+    });
+  }
+
+  renderExplosions() {
+    verbose('renderExplosions');
+    var now = Date.now();
+    this.explosions.forEach(explosion => {
+      if (!explosion.points) {
+        return;
+      } else if (now - explosion.startTime > explosionDuration) {
+        this.removeExplosion();
+        return;
+      } else {
+        explosion.draw();
+      }
+    });
+  }
 }
 
 class Explosion {
-    constructor(context, x, y) {
-        this.context = context;
-        this.x = x;
-        this.y = y;
-        this.size = 1;
-        this.isFinished = false;
-    }
+  constructor(context, x, y) {
+    this.context = context;
+    this.x = x;
+    this.y = y;
+    this.startTime = Date.now();
+    this.points = [];
+    
+    //pick the color to be the shade of red that is 
+    // the percentage of the way through the explosion
+    this.ratio = rand(0, 100) / 100;
 
-    update() {
-        this.size += 1;
-        if (this.size > 100) {
-            this.isFinished = true;
-        }
-    }
+    function r() { return (Math.random() - 0.5) * 2 };
 
-    draw() {
-        this.context.save();
-        this.context.beginPath();
-        this.context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        this.context.strokeStyle = 'red';
-        this.context.stroke();
-        this.context.closePath();
-        this.context.restore();
+    for (let i = 0; i < 2500; i++) {
+      var dx = Math.exp(r()) * r() * 2;
+      var dy = Math.exp(r()) * r() * 2;
+      this.points.push({ x: x, y: y, dx: dx, dy: dy })
     }
+  }
+
+  draw() {
+    var timeRemaining = Date.now() - this.startTime;
+    var remaining = 1 - timeRemaining / explosionDuration;
+    var r = Math.ceil(255 * remaining).toString(16).padStart(2, '0');
+    var g = Math.ceil(255 * remaining * this.ratio).toString(16).padStart(2, '0');
+    var color = '#' + r + g + '00';
+
+    this.points.forEach(point => {
+      this.context.save();
+      point.x += point.dx;
+      point.y += point.dy;
+      this.context.fillStyle = color;
+      this.context.fillRect(point.x, point.y, 2, 2);
+      this.context.restore();
+    });
+  }
 }

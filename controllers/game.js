@@ -3,7 +3,8 @@ class Game {
 
   constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
     this.canvas = canvas;
-    this.canvas.addEventListener('click', this.onCanvasClick.bind(this));
+    this.canvas.onclick = this.onCanvasClick;
+    this.onCanvasClick.bind(this);
 
     this.username = username;
     this.operation = operation;
@@ -46,20 +47,13 @@ class Game {
 
 
   startGame() {
-    //generate a new question
     this.questionController = new QuestionController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
-    this.questionController.generateNewQuestion(this.questionCoordinates);
-
-    //generate new answers
     this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
-    this.answerController.generateNewAnswers(this.canvas, this.questionController.correctAnswer);
-
-    //initialize the click controller
     this.clickController = new ClickController(this.context);
-
-    //explosion controller
     this.explosionController = new ExplosionController(this.context);
-
+    
+    this.questionController.generateNewQuestion(this.questionCoordinates);
+    this.answerController.generateNewAnswers(this.canvas, this.questionController.correctAnswer);
     this.animate();
   }
 
@@ -78,6 +72,6 @@ class Game {
 
   dispose() {
     this.disposing = true;
-    this.canvas.removeEventListener('click', this.onCanvasClick.bind(this));
+    this.canvas.onclick = null;
   }
 }
