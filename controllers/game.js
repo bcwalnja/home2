@@ -52,6 +52,7 @@ class Game {
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
     this.missileController = new MissileController(this.context);
+    this.timeController = new TimeController();
     
     this.questionController.generateNewQuestion(this.questionCoordinates);
     this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
@@ -74,6 +75,7 @@ class Game {
     this.answerController.renderAnswers(this.context);
     this.explosionController.renderExplosions();
     this.missileController.renderMissiles();
+    this.timeController.renderTime(this.context);
 
     requestAnimationFrame(this.animate.bind(this));
   }
