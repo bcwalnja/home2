@@ -27,7 +27,7 @@ class QuestionController {
     return this.lastId++;
   }
 
-  generateNewQuestion({ x, y, dy }) {
+  generateNewQuestion({ x, y, dx, dy }) {
     log('generating a new question');
 
     var newQ = {};
@@ -52,6 +52,7 @@ class QuestionController {
     newQ.x = x;
     newQ.y = y;
     newQ.dx = 0;
+    newQ.dx = dx;
     newQ.dy = dy;
     newQ.focused = true;
     this.questions[newQ.id] = newQ;

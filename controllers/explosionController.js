@@ -61,7 +61,7 @@ class Explosion {
     }
 
     let maxVelocity = Math.min(window.innerWidth, window.innerHeight) / 180;
-    var count = 2500;
+    var count = 250;
     for (let i = 0; i < count; i++) {
       // add a point that is i / count * 2 * Math.PI radians around the circle
       var angle = i / count * 2 * Math.PI;

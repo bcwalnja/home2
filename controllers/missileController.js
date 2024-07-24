@@ -19,29 +19,28 @@ class MissileController {
   padding
   missiles = []
 
-  addMissile(source, target) {
+  addMissile(source, obj) {
     const { text, x, y } = source;
-    const { x: targetX, y: targetY, dx: targetdX, dy: targetdY } = target;
-    log('adding missile:', text, x, y, targetX, targetY);
+    const { x: targetX, y: targetY, dx: targetdX, dy: targetdY } = obj;
+    let target = {};
+    target.x = targetX + targetdX * 100;
+    target.y = targetY + targetdY * 100;
+    log('adding missile:', text, x, y, target.x, target.y);
     
     const missile = new Missile()
     missile.text = text
     missile.x = x
     missile.y = y
+    const gravity = .05;
+    const frames = 100;
     
-    // target point [100 frames from now] (targetX + dx * 100, targetY + dy * 100)
-    // const dx = (targetX - x + targetdX * 100) / 100;
-    // const dy = (targetY - y + targetdY * 100) / 100;
+    // calculate the vertical motion without regard to the horizontal motion
+    let verticalDistance = y - target.y;
+    let v0y = (verticalDistance + (0.5 * gravity * frames * frames)) / frames;
+    let v0x = (target.x - x) / frames;
 
-    // those values would be right if no gravity was applied
-    // how much time does it take to reach the target? 100 frames, each frame is 16ms
-    const gravity = .05; //TODO: fix this
-    const t = 100 * 5;
-    const dx = (targetX - x - targetdX * t) / t;
-    const dy = (targetY - y - targetdY * t) / t + 0.5 * gravity * t;
-
-    missile.dx = dx;
-    missile.dy = -dy;
+    missile.dx = v0x;
+    missile.dy = -v0y;
     missile.a = gravity;
     this.missiles.push(missile);
   }

@@ -12,7 +12,8 @@ class Game {
     this.fontSize = Math.floor(this.canvas.height / 20);
     // TODO: add a control to allow the user to set the speed
     let speed = this.canvas.height * .0017;
-    this.questionCoordinates = { x: canvas.width / 2, y: this.fontSize, dy: speed };
+    // .0017 as a fraction is 16 / 1000 which is 4/250
+    this.questionCoordinates = { x: canvas.width / 2, y: this.fontSize, dx: 0, dy: speed };
 
     this.context = this.canvas.getContext('2d');
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
