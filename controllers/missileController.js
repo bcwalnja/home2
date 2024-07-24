@@ -3,6 +3,9 @@ class Missile {
   text
   x
   y
+  dx
+  dy
+  a
 }
 
 class MissileController {
@@ -25,14 +28,22 @@ class MissileController {
     missile.text = text
     missile.x = x
     missile.y = y
-    // TODO: decide on the physics of the environment, 
-    // and then calculate the dx and dy values
     
-    // temporary values:
-    missile.dx = (targetX + targetdX * 100 - x) / 100
-    missile.dy = (targetY + targetdY * 100 - y) / 100
-    
-    this.missiles.push(missile)
+    // target point [100 frames from now] (targetX + dx * 100, targetY + dy * 100)
+    // const dx = (targetX - x + targetdX * 100) / 100;
+    // const dy = (targetY - y + targetdY * 100) / 100;
+
+    // those values would be right if no gravity was applied
+    // how much time does it take to reach the target? 100 frames, each frame is 16ms
+    const gravity = .05; //TODO: fix this
+    const t = 100 * 5;
+    const dx = (targetX - x - targetdX * t) / t;
+    const dy = (targetY - y - targetdY * t) / t + 0.5 * gravity * t;
+
+    missile.dx = dx;
+    missile.dy = -dy;
+    missile.a = gravity;
+    this.missiles.push(missile);
   }
 
   removeMissile() {
@@ -45,15 +56,17 @@ class MissileController {
     for (const x of this.missiles) {
       if (x.dx || x.dy) {
         x.x += x.dx;
-        x.y += x.dy;
+        x.y += x.dy; // Invert the y-axis by subtracting dy instead of adding it
       }
-
+  
       if (x.x < 0 || x.x > this.context.canvas.width || x.y < 0 || x.y > this.context.canvas.height) {
         log('removing missile:', x);
         this.missiles.splice(this.missiles.indexOf(x), 1);
+      } else {
+        this.context.fillText(x.text, x.x, x.y);
+        x.dy += x.a; // add the gravity acceleration to the missile's vertical velocity
       }
       
-      this.context.fillText(x.text, x.x, x.y);
       // I used the following code to render a missile
       // this.context.save(); // Save the current this.context state
       // this.context.translate(x.x, x.y); // Translate to the missile's position

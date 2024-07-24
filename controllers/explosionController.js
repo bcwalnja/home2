@@ -4,9 +4,9 @@ class ExplosionController {
     this.explosions = [];
   }
 
-  createExplosion(x, y) {
+  createExplosion(x, y, color) {
     log('creating explosion at:', x, y);
-    const explosion = new Explosion(this.context, x, y);
+    const explosion = new Explosion(this.context, x, y, color);
     this.explosions.push(explosion);
   }
 
@@ -41,22 +41,34 @@ class ExplosionController {
 }
 
 class Explosion {
-  constructor(context, x, y) {
+  constructor(context, x, y, color) {
     this.context = context;
     this.x = x;
     this.y = y;
     this.startTime = Date.now();
     this.points = [];
-    
-    //pick the color to be the shade of red that is 
-    // the percentage of the way through the explosion
-    this.ratio = rand(0, 100) / 100;
-    let maxVelocity = Math.min(window.innerWidth, window.innerHeight) / 100;
 
-    for (let i = 0; i < 75; i++) {
-      var dx = rand(-maxVelocity, maxVelocity);
-      var dy = rand(-maxVelocity, maxVelocity);
-      this.points.push({ x: x, y: y, dx: dx, dy: dy })
+    if (!color) {
+      this.ratio = rand(0, 100) / 100;
+    } else {
+      if (color === 'red') {
+        this.ratio = 0;
+      } else if (color === 'orange') {
+        this.ratio = 0.5;
+      } else if (color === 'yellow') {
+        this.ratio = 1;
+      }
+    }
+
+    let maxVelocity = Math.min(window.innerWidth, window.innerHeight) / 180;
+    var count = 2500;
+    for (let i = 0; i < count; i++) {
+      // add a point that is i / count * 2 * Math.PI radians around the circle
+      var angle = i / count * 2 * Math.PI;
+      var velocity = maxVelocity;
+      var dx = Math.cos(angle) * velocity * Math.random();
+      var dy = Math.sin(angle) * velocity * Math.random();
+      this.points.push({ x, y, dx, dy });
     }
   }
 
