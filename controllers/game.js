@@ -110,10 +110,15 @@ class Game {
     if (expiredQ) {
       log('question expired:', expiredQ);
       this.explosionController.createExplosion(expiredQ.x, expiredQ.y);
-      this.missileController.removeMissile();
       this.questionController.removeQuestion(expiredQ);
-      this.questionController.generateNewQuestion(this.questionCoordinates);
-      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+      // if there's a missile targeting the expired question, remove it
+      if (this.missileController.missiles.length > 0) {
+        this.missileController.removeMissile();
+      } else {
+        this.questionController.generateNewQuestion(this.questionCoordinates);
+        this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+      }
+
     }
   }
 
