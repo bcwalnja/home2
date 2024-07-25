@@ -18,6 +18,8 @@ class Game {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.font = this.fontSize + 'px Arial';
     this.context.fillStyle = 'white';
+    this.context.strokeStyle = 'white';
+    this.context.lineWidth = 2;
 
     this.term1min = term1min;
     this.term1max = term1max;

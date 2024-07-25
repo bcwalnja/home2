@@ -98,6 +98,17 @@ class QuestionController {
       q.x += q.dx;
       q.y += q.dy;
       context.fillText(q.text, q.x, q.y);
+
+      if (q.focused) {
+        let width = context.measureText(q.text).width;
+        let fontSize = parseInt(context.font.split('px')[0]);
+        context.strokeRect(
+          q.x,
+          q.y - fontSize,
+          width,
+          fontSize * 1.25
+        );
+      }
     }
   }
 
