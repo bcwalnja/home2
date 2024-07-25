@@ -37,12 +37,16 @@ class Game {
     let x = event.clientX - canvas.getBoundingClientRect().left;
     let y = event.clientY - canvas.getBoundingClientRect().top;
     log('canvas clicked at:', x, y);
-    var obj = this.clickController.onClick(x, y, this.answerController.answers);
-    log('clicked object:', obj);
-    if (obj) {
-      let source = obj;
+    var answer = this.clickController.onClick(x, y, this.answerController.answers);
+    log('clicked answer:', answer);
+    if (answer) {
+      let source = answer;
       let target = this.questionController.getFocusedQuestion();
       this.missileController.addMissile(source, target);
+      // TODO: add the code to manage which question is focused
+      // so that each consecutive click will target the next question
+      this.questionController.generateNewQuestion(this.questionCoordinates);
+      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     }
     this.explosionController.createExplosion(x, y);
   }
