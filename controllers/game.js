@@ -55,6 +55,16 @@ class Game {
     log('canvas clicked at:', x, y);
     var answer = this.clickController.onClick(x, y, this.answerController.answers);
     log('clicked answer:', answer);
+    /* Previous code path:
+    if (answer) {
+      let source = answer;
+      let target = this.questionController.getFocusedQuestion();
+      this.missileController.addMissile(source, target);
+      this.questionController.generateNewQuestion(this.questionCoordinates);
+      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+    } 
+     */
+
     if (answer) {
       let source = answer;
       let target = this.questionController.getFocusedQuestion();
