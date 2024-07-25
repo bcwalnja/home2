@@ -58,9 +58,14 @@ class Game {
     if (answer) {
       let source = answer;
       let target = this.questionController.getFocusedQuestion();
-      this.missileController.addMissile(source, target);
-      this.questionController.generateNewQuestion(this.questionCoordinates);
-      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+      let isCorrectAnswer = answer.text === this.questionController.getCorrectAnswer();
+      this.missileController.addMissile(source, target, isCorrectAnswer);
+      if (isCorrectAnswer) {
+        this.questionController.generateNewQuestion(this.questionCoordinates);
+        this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+      } else {
+        this.answerController.removeAnswer(answer);
+      }
     }
     this.explosionController.createExplosion(x, y);
   }

@@ -19,7 +19,7 @@ class MissileController {
   padding
   missiles = []
 
-  addMissile(source, obj) {
+  addMissile(source, obj, isCorrectAnswer) {
     const { text, x, y } = source;
     const { x: targetX, y: targetY, dx: targetdX, dy: targetdY } = obj;
     let target = {};
@@ -41,6 +41,16 @@ class MissileController {
 
     missile.dx = v0x;
     missile.dy = -v0y;
+
+    if (!isCorrectAnswer) {
+      let r = Math.random() - 0.5;
+      if (r > 0) {
+        missile.dx += r + 1;
+      } else {
+        missile.dx += r - 1;
+      }
+    }
+
     missile.a = gravity;
     this.missiles.push(missile);
   }

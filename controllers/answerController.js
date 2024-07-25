@@ -45,6 +45,10 @@ class AnswerController {
     }
   }
 
+  removeAnswer(answer) {
+    this.answers = this.answers.filter(x => x.text != answer.text);
+  }
+
   renderAnswers(context) {
     verbose('renderAnswers');
     this.answers?.forEach(x => {
