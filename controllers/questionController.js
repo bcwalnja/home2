@@ -103,13 +103,9 @@ class QuestionController {
 
   isQuestionAnswered(missiles, canvas) {
     const padding = canvas.height * 0.02;
-    
+
     for (const key of Object.keys(this.questions)) {
       const q = this.questions[key];
-
-      if (q.y > canvas.height - 2 * 20) {
-        return q;
-      }
 
       for (const m of missiles) {
         if (m.x > q.x - padding &&
@@ -121,6 +117,16 @@ class QuestionController {
       }
     }
     return null;
+  }
+
+  isQuestionExpired(canvas) {
+    const padding = canvas.height * 0.1;
+    for (const key of Object.keys(this.questions)) {
+      const q = this.questions[key];
+      if (q.y > canvas.height - padding) {
+        return q;
+      }
+    }
   }
 
   removeQuestion(q) {

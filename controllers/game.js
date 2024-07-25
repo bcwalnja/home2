@@ -11,9 +11,8 @@ class Game {
     this.operation = operation;
     this.fontSize = Math.floor(this.canvas.height / 20);
     // TODO: add a control to allow the user to set the speed
-    let speed = this.canvas.height * .0017;
-    // .0017 as a fraction is 16 / 1000 which is 4/250
-    this.questionCoordinates = { x: canvas.width / 2, y: this.fontSize, dx: 0, dy: speed };
+    this.speed = this.canvas.height * .0017;
+    
 
     this.context = this.canvas.getContext('2d');
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -30,8 +29,23 @@ class Game {
   context;
   username;
   operation;
-  questionCoordinates;
+  get questionCoordinates() {
+    // I want to pick an initial x value randomly across the top of the canvas, a y value of fontSize
+    // and a dy value of this.speed
+    // then I want to pick a dx value that will move the question down to a random x value
+    // that is within the canvas width, and a y value of canvas.height - fontSize * 3
+    let padding = this.fontSize * 3;
+    let x = rand(padding, this.canvas.width - padding);
+    let y = this.fontSize;
+    let dy = this.speed;
 
+    let targetX = rand(padding, this.canvas.width - padding);
+    let targetY = this.canvas.height - padding;
+
+    let dx = (targetX - x) / (targetY - y) * dy;
+
+    return { x, y, dx, dy };
+  }
 
   onCanvasClick = (event) => {
     let x = event.clientX - canvas.getBoundingClientRect().left;
@@ -43,8 +57,6 @@ class Game {
       let source = answer;
       let target = this.questionController.getFocusedQuestion();
       this.missileController.addMissile(source, target);
-      // TODO: add the code to manage which question is focused
-      // so that each consecutive click will target the next question
       this.questionController.generateNewQuestion(this.questionCoordinates);
       this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     }
@@ -92,6 +104,15 @@ class Game {
       this.explosionController.createExplosion(answeredQ.x, answeredQ.y);
       this.missileController.removeMissile();
       this.questionController.removeQuestion(answeredQ);
+    }
+
+    let expiredQ = this.questionController.isQuestionExpired(this.canvas);
+    if (expiredQ) {
+      log('question expired:', expiredQ);
+      this.explosionController.createExplosion(expiredQ.x, expiredQ.y);
+      this.questionController.removeQuestion(expiredQ);
+      this.questionController.generateNewQuestion(this.questionCoordinates);
+      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     }
   }
 
