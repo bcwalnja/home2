@@ -54,6 +54,10 @@ class QuestionController {
     newQ.dx = 0;
     newQ.dx = dx;
     newQ.dy = dy;
+    //only this question should be focused
+    for (const key of Object.keys(this.questions)) {
+      this.questions[key].focused = false;
+    }
     newQ.focused = true;
     this.questions[newQ.id] = newQ;
 

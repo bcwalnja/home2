@@ -92,8 +92,6 @@ class Game {
       this.explosionController.createExplosion(answeredQ.x, answeredQ.y);
       this.missileController.removeMissile();
       this.questionController.removeQuestion(answeredQ);
-      this.questionController.generateNewQuestion(this.questionCoordinates);
-      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     }
   }
 
