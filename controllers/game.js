@@ -84,6 +84,7 @@ class Game {
   }
 
   handleQuestionAnswered() {
+    // todo: this should return both the question and the missile, that way I can make sure the missile is removed
     let answeredQ = this.questionController.isQuestionAnswered(this.missileController.missiles, this.canvas);
     if (answeredQ) {
       log('question answered:', answeredQ);
