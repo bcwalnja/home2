@@ -1,5 +1,9 @@
 log('loaded game.js');
 class Game {
+    canvas;
+    context;
+    username;
+    operation;
 
   constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
     this.canvas = canvas;
@@ -10,9 +14,6 @@ class Game {
     this.username = username;
     this.operation = operation;
     this.fontSize = Math.floor(this.canvas.height / 20);
-    // TODO: add a control to allow the user to set the speed
-    this.speed = this.canvas.height * .0017;
-    
 
     this.context = this.canvas.getContext('2d');
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -25,28 +26,6 @@ class Game {
     this.term1max = term1max;
     this.term2min = term2min;
     this.term2max = term2max;
-  }
-
-  canvas;
-  context;
-  username;
-  operation;
-  get questionCoordinates() {
-    // I want to pick an initial x value randomly across the top of the canvas, a y value of fontSize
-    // and a dy value of this.speed
-    // then I want to pick a dx value that will move the question down to a random x value
-    // that is within the canvas width, and a y value of canvas.height - fontSize * 3
-    let padding = this.fontSize * 3;
-    let x = rand(padding, this.canvas.width - padding);
-    let y = this.fontSize;
-    let dy = this.speed;
-
-    let targetX = rand(padding, this.canvas.width - padding);
-    let targetY = this.canvas.height - padding;
-
-    let dx = (targetX - x) / (targetY - y) * dy;
-
-    return { x, y, dx, dy };
   }
 
   onCanvasClick = (event) => {
@@ -81,7 +60,7 @@ class Game {
   }
 
   startGame() {
-    this.questionController = new QuestionController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
+    this.questionController = new QuestionController(this.context, this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
