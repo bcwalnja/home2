@@ -46,8 +46,12 @@ class ScoreController {
         return this.score;
     }
 
-    incrementScore() {
-        this.score++;
+    incrementScore(value) {
+        if (value) {
+            this.score += value;
+        } else {
+            this.score++;
+        }
     }
 
     decrementScore() {
