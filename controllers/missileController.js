@@ -45,13 +45,10 @@ class MissileController {
     missile.dy = -v0y;
 
     if (!isCorrectAnswer) {
-      let r = Math.random() - 0.5;
-      let r2 = this.context.canvas.height * 0.005;
-      if (r > 0) {
-        missile.dx += r + r2;
-      } else {
-        missile.dx += r - r2;
-      }
+      let r = Math.random();
+      let r2 = this.context.canvas.height * 0.002;
+      // for example, .005 * 1080 = 5.4 pixels
+      missile.dy += r + r2;
     }
 
     missile.a = gravity;
