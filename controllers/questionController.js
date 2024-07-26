@@ -176,7 +176,7 @@ class QuestionController {
           m.x < q.x + this.padding &&
           m.y > q.y - this.padding &&
           m.y < q.y + this.padding) {
-          return q;
+          return {q, m};
         }
       }
     }

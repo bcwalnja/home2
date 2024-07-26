@@ -55,8 +55,10 @@ class MissileController {
     this.missiles.push(missile);
   }
 
-  removeMissile() {
-    if (this.missiles?.length) {
+  removeMissile(missile) {
+    if (missile) {
+      this.missiles = this.missiles.filter(x => x !== missile);
+    } else if (this.missiles?.length) {
       this.missiles.shift();
     }
   }
