@@ -122,7 +122,8 @@ class QuestionController {
         if (m.x > q.x - padding &&
           m.x < q.x + padding &&
           m.y > q.y - padding &&
-          m.y < q.y + padding) {
+          m.y < q.y + padding &&
+          q.answer == m.text) {
           return q;
         }
       }

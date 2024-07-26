@@ -44,10 +44,11 @@ class MissileController {
 
     if (!isCorrectAnswer) {
       let r = Math.random() - 0.5;
+      let r2 = this.context.canvas.height * 0.005;
       if (r > 0) {
-        missile.dx += r + 1;
+        missile.dx += r + r2;
       } else {
-        missile.dx += r - 1;
+        missile.dx += r - r2;
       }
     }
 
@@ -68,7 +69,7 @@ class MissileController {
         x.y += x.dy; // Invert the y-axis by subtracting dy instead of adding it
       }
   
-      if (x.x < 0 || x.x > this.context.canvas.width || x.y < 0 || x.y > this.context.canvas.height) {
+      if (x.y > this.context.canvas.height) {
         log('removing missile:', x);
         this.missiles.splice(this.missiles.indexOf(x), 1);
       } else {
@@ -83,5 +84,13 @@ class MissileController {
       // this.context.fillText('\u{1F680}', 0, 0); // Draw the emoji at the translated and rotated position
       // this.context.restore(); // Restore the this.context to its original state
     }
+  }
+
+  drawMissileEmoji(missile) {
+    this.context.save(); // Save the current this.context state
+    this.context.translate(missile.x, missile.y); // Translate to the missile's position
+    this.context.rotate(-45 * Math.PI / 180); // Rotate 45 degrees to the left
+    this.context.fillText('\u{1F680}', 0, 0); // Draw the emoji at the translated and rotated position
+    this.context.restore(); // Restore the this.context to its original state
   }
 }
