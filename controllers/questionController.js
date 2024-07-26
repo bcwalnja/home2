@@ -114,16 +114,15 @@ class QuestionController {
 
   isQuestionAnswered(missiles, canvas) {
     const padding = canvas.height * 0.02;
-
     for (const key of Object.keys(this.questions)) {
       const q = this.questions[key];
-
       for (const m of missiles) {
-        if (m.x > q.x - padding &&
+        if (m.isCorrectAnswer &&
+          m.target === q.id &&
+          m.x > q.x - padding &&
           m.x < q.x + padding &&
           m.y > q.y - padding &&
-          m.y < q.y + padding &&
-          q.answer == m.text) {
+          m.y < q.y + padding) {
           return q;
         }
       }

@@ -29,6 +29,8 @@ class MissileController {
     
     const missile = new Missile()
     missile.text = text
+    missile.target = obj.id;
+    missile.isCorrectAnswer = isCorrectAnswer;
     missile.x = x
     missile.y = y
     const gravity = .05;
