@@ -1,9 +1,9 @@
 log('loaded game.js');
 class Game {
-    canvas;
-    context;
-    username;
-    operation;
+  canvas;
+  context;
+  username;
+  operation;
 
   constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
     this.canvas = canvas;
@@ -33,18 +33,9 @@ class Game {
     let y = event.clientY - canvas.getBoundingClientRect().top;
     log('canvas clicked at:', x, y);
     var answer = this.clickController.onClick(x, y, this.answerController.answers);
-    log('clicked answer:', answer);
-    /* Previous code path:
-    if (answer) {
-      let source = answer;
-      let target = this.questionController.getFocusedQuestion();
-      this.missileController.addMissile(source, target);
-      this.questionController.generateNewQuestion(this.questionCoordinates);
-      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
-    } 
-     */
 
     if (answer) {
+      log('clicked answer:', answer);
       let source = answer;
       let target = this.questionController.getFocusedQuestion();
       let isCorrectAnswer = answer.text === this.questionController.getCorrectAnswer();
@@ -66,7 +57,8 @@ class Game {
     this.explosionController = new ExplosionController(this.context);
     this.missileController = new MissileController(this.context);
     this.timeController = new TimeController();
-    
+    this.scoreController = new ScoreController(this.context);
+
     this.questionController.generateNewQuestion(this.questionCoordinates);
     this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     this.animate();
@@ -74,10 +66,7 @@ class Game {
 
   animate() {
     if (this.disposing) {
-      this.context.save();
-      this.context.textAlign = 'center';
-      this.context.fillText('Game Over', this.canvas.width / 2, this.canvas.height / 2);
-      this.context.restore();
+      this.gameOver();
       return;
     }
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -89,6 +78,7 @@ class Game {
     this.explosionController.renderExplosions();
     this.missileController.renderMissiles();
     this.timeController.renderTime(this.context);
+    this.scoreController.renderScore();
 
     requestAnimationFrame(this.animate.bind(this));
   }
@@ -100,6 +90,7 @@ class Game {
       this.explosionController.createExplosion(answeredQ.x, answeredQ.y);
       this.missileController.removeMissile();
       this.questionController.removeQuestion(answeredQ);
+      this.scoreController.incrementScore();
     }
 
     let expiredQ = this.questionController.isQuestionExpired(this.canvas);
@@ -116,6 +107,39 @@ class Game {
       }
 
     }
+  }
+
+  gameOver() {
+    let score = this.scoreController.getScore();
+    let scores = JSON.parse(localStorage.getItem('scores')) || [];
+    let existingScore = scores.find(s => s.username === this.username);
+    if (existingScore) {
+      if (score > existingScore.score) {
+      existingScore.score = score;
+      }
+    } else {
+      scores.push({ username: this.username, score: score });
+    }
+    localStorage.setItem('scores', JSON.stringify(scores));
+    
+    let scoretext = this.username + '\'s Score: ' + score;
+    let highScore = scores.reduce((acc, cur) => acc.score > cur.score ? acc : cur, { score: 0 });
+    let highscoretext = this.username + '\'s High Score: ' + highScore.score;
+    let x = this.canvas.width / 2;
+    let y = this.canvas.height / 2;
+
+    this.context.save();
+    this.context.textAlign = 'center';
+    this.context.fillText('Game Over', x, y);
+    this.context.restore();
+
+    this.context.save();
+    this.context.textAlign = 'center';
+    this.context.font = Math.floor(this.fontSize * .7) + 'px Arial';
+    this.context.fillText(scoretext, x, y + this.fontSize * 2);
+    this.context.fillText(highscoretext, x, y + this.fontSize * 3);
+    this.context.restore();
+
   }
 
   dispose() {

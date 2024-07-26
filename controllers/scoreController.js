@@ -27,21 +27,19 @@ class ScoreController {
     return remaining.toFixed(0);
   }*/
 
-    constructor() {
+    constructor(context) {
         log('ScoreController instantiated');
         this.score = 0;
+        this.fontSize = Math.floor(context.canvas.height / 20);
+        this.context = context;
     }
 
-    renderScore(context) {
-        if (!this.fontSize) {
-            this.fontSize = Math.floor(context.canvas.height / 20);
-        }
-        
-        context.save();
-        context.textAlign = 'right';
-        context.textBaseline = 'top';
-        context.fillText(this.getScore(), context.canvas.width - this.fontSize, this.fontSize);
-        context.restore();
+    renderScore() {
+        this.context.save();
+        this.context.textAlign = 'right';
+        this.context.textBaseline = 'top';
+        this.context.fillText(this.getScore(), this.context.canvas.width - this.fontSize, this.fontSize);
+        this.context.restore();
     }
 
     getScore() {

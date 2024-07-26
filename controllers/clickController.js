@@ -7,6 +7,10 @@ class ClickController {
   }
 
   onClick(x, y, args) {
+    if (!args) {
+      return;
+    }
+    
     var fontSize = parseFloat(this.context?.font?.split('px')[0]) || 16;
 
     for (let i = 0; i < args.length; i++) {
