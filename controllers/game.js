@@ -84,15 +84,14 @@ class Game {
   }
 
   handleQuestionAnswered() {
-    // todo: this should return both the question and the missile, that way I can make sure the missile is removed
-    let {answeredQ, missile} = this.questionController.isQuestionAnswered(this.missileController.missiles);
-    if (answeredQ) {
-      log('question answered:', answeredQ);
-      this.explosionController.createExplosion(answeredQ.x, answeredQ.y);
+    let result = this.questionController.isQuestionAnswered(this.missileController.missiles);
+    if (result) {
+      log('question answered:', result.q);
+      this.explosionController.createExplosion(result.q.x, result.q.y);
       this.missileController.removeMissile();
-      this.questionController.removeQuestion(answeredQ);
+      this.questionController.removeQuestion(result.q);
       this.scoreController.incrementScore();
-      this.missileController.removeMissile(missile);
+      this.missileController.removeMissile(result.m);
     }
 
     let expiredQ = this.questionController.isQuestionExpired(this.canvas);
