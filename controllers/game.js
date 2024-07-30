@@ -148,6 +148,7 @@ class Game {
   }
 
   dispose() {
+    // todo: add a way that the game can tell main.js to run its reset code
     this.disposing = true;
     this.canvas.onclick = null;
   }
