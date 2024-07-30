@@ -65,6 +65,10 @@ class Game {
   }
 
   animate() {
+    if (this.timeController.isTimeUp()) {
+      this.dispose();
+    }
+    
     if (this.disposing) {
       this.gameOver();
       return;

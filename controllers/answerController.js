@@ -10,6 +10,11 @@ class AnswerController {
   }
 
   generateNewAnswers(canvas, correctAnswer) {
+    if (!correctAnswer) {
+      console.log('correctAnswer is not defined');
+      return;
+    }
+    
     log('generating new answers');
     let a1 = {};
     let a2 = {};
