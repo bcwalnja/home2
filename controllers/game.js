@@ -65,7 +65,7 @@ class Game {
   }
 
   animate() {
-    if (this.timeController.isTimeUp()) {
+    if (this.timeController.getTimeRemaining() <= 0) {
       this.dispose();
     }
     
@@ -144,7 +144,7 @@ class Game {
     this.context.fillText(scoretext, x, y + this.fontSize * 2);
     this.context.fillText(highscoretext, x, y + this.fontSize * 3);
     this.context.restore();
-
+    
   }
 
   dispose() {

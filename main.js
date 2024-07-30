@@ -56,12 +56,18 @@ const onStartClicked = () => {
 
 const onResetClicked = () => {
   console.log('Reset button was clicked!');
+  resetGame();
+}
+
+const resetGame = () => {
+  if (game && !game.disposing) {
+    game.dispose();
+  }
   startButton.disabled = false;
   resetButton.disabled = true;
   for (const input of allInputs) {
     input.disabled = false;
   }
-  game?.dispose();
 }
 
 const findSelectedOperation = () => {
