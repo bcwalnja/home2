@@ -40,6 +40,7 @@ class Game {
       let target = this.questionController.getFocusedQuestion();
       let isCorrectAnswer = answer.text === this.questionController.getCorrectAnswer();
       this.missileController.addMissile(source, target, isCorrectAnswer);
+      this.scoreController.incrementAttempts();
       if (isCorrectAnswer) {
         this.questionController.generateNewQuestion(this.questionCoordinates);
         this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
@@ -65,10 +66,6 @@ class Game {
   }
 
   animate() {
-    if (this.timeController.getTimeRemaining() <= 0) {
-      this.dispose();
-    }
-    
     if (this.disposing) {
       this.gameOver();
       return;
@@ -83,6 +80,11 @@ class Game {
     this.missileController.renderMissiles();
     this.timeController.renderTime(this.context);
     this.scoreController.renderScore();
+
+    if (this.timeController.getTimeRemaining() <= 0) {
+      this.timeExpired();
+      this.dispose();
+    }
 
     requestAnimationFrame(this.animate.bind(this));
   }
@@ -110,26 +112,40 @@ class Game {
         this.questionController.generateNewQuestion(this.questionCoordinates);
         this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
       }
-
     }
   }
 
   gameOver() {
-    let score = this.scoreController.getScore();
+    const value = (score, attempts) => {
+      if (!attempts) {
+        return 0;
+      }
+      var percent = score / attempts * 100;
+      return Math.round(score * percent);
+    }
+
+    let attempts = this.scoreController.attempts;
+    let score = this.scoreController.score;
+
     let scores = JSON.parse(localStorage.getItem('scores')) || [];
-    let existingScore = scores.find(s => s.username === this.username);
-    if (existingScore) {
-      if (score > existingScore.score) {
-      existingScore.score = score;
+    let highScore = scores.find(s => s.username === this.username);
+
+    if (highScore) {
+      if (this.scoreController.getScoreValue() > value(highScore.score, highScore.attempts)) {
+        highScore.score = score;
+        highScore.attempts = attempts;
       }
     } else {
-      scores.push({ username: this.username, score: score });
+      highScore = { username: this.username, score: score, attempts: attempts };
+      scores.push(highScore);
     }
+
     localStorage.setItem('scores', JSON.stringify(scores));
-    
-    let scoretext = this.username + '\'s Score: ' + score;
-    let highScore = scores.reduce((acc, cur) => acc.score > cur.score ? acc : cur, { score: 0 });
-    let highscoretext = this.username + '\'s High Score: ' + highScore.score;
+
+    let scoretext = this.username + '\'s Score: ';
+    scoretext += score + ' Correct, ' + Math.round(score / attempts * 100) + '% Accuracy,  ';
+    scoretext += 'Total: ' + value(score, attempts);
+    let highscoretext = this.username + '\'s High Score: ' + value(highScore.score, highScore.attempts);
     let x = this.canvas.width / 2;
     let y = this.canvas.height / 2;
 
@@ -144,7 +160,7 @@ class Game {
     this.context.fillText(scoretext, x, y + this.fontSize * 2);
     this.context.fillText(highscoretext, x, y + this.fontSize * 3);
     this.context.restore();
-    
+
   }
 
   dispose() {

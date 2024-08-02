@@ -33,7 +33,7 @@ const resizeCanvas = () => {
 }
 
 const onStartClicked = () => {
-  console.log('Start button was clicked!');
+  console.log('starting new game');
   startButton.disabled = true;
   resetButton.disabled = false;
   for (const input of allInputs) {
@@ -52,14 +52,11 @@ const onStartClicked = () => {
 
   game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max);
   game.startGame();
-}
-
-const onResetClicked = () => {
-  console.log('Reset button was clicked!');
-  resetGame();
+  game.timeExpired = resetGame;
 }
 
 const resetGame = () => {
+  console.log('resetting game');
   if (game && !game.disposing) {
     game.dispose();
   }
@@ -69,6 +66,8 @@ const resetGame = () => {
     input.disabled = false;
   }
 }
+
+const onResetClicked = resetGame;
 
 const findSelectedOperation = () => {
   for (const operation of radioButtons) {
