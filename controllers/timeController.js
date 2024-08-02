@@ -3,7 +3,7 @@ class TimeController {
     log('TimeController instantiated');
     this.startTime = Date.now();
     // TODO: maybe allow the user to set the game length?
-    this.gameLength = 6;
+    this.gameLength = 120;
   }
 
   renderTime(context) {
