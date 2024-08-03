@@ -9,9 +9,10 @@ class Missile {
 }
 
 class MissileController {
-  constructor(context) {
+  constructor(context, missileFrameCount) {
     log('MissileController instantiated');
     this.context = context;
+    this.missileFrameCount = missileFrameCount;
     this.padding = canvas.height * .02;
   }
   
@@ -23,8 +24,8 @@ class MissileController {
     const { text, x, y } = source;
     const { x: targetX, y: targetY, dx: targetdX, dy: targetdY } = obj;
     let target = {};
-    target.x = targetX + targetdX * 100;
-    target.y = targetY + targetdY * 100;
+    target.x = targetX + targetdX * this.missileFrameCount;
+    target.y = targetY + targetdY * this.missileFrameCount;
     log('adding missile:', text, x, y, target.x, target.y);
     
     const missile = new Missile()
@@ -34,7 +35,7 @@ class MissileController {
     missile.x = x
     missile.y = y
     const gravity = .05;
-    const frames = 100;
+    const frames = this.missileFrameCount;
     
     // calculate the vertical motion without regard to the horizontal motion
     let verticalDistance = y - target.y;

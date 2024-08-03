@@ -5,6 +5,7 @@ resetButton = document.getElementById('reset-button');
 multiplicationControls = document.getElementById('multiplication-control-container');
 operationRadioButtons = document.querySelectorAll('input[name="operation"]');
 modeRadioButtons = document.querySelectorAll('input[name="mode"]');
+difficultyRadioButtons = document.querySelectorAll('input[name="difficulty"]');
 allInputs = document.querySelectorAll('input');
 allControlsContainer = document.getElementById('all-controls-container');
 canvas = document.getElementById('game-canvas');
@@ -51,6 +52,7 @@ const onStartClicked = () => {
   log('selected operation:', operation);
 
   let mode = findSelectedMode();
+  let difficulty = findSelectedDifficulty();
 
   let username = playerName.value;
   localStorage.setItem('player', username);
@@ -59,7 +61,7 @@ const onStartClicked = () => {
   let term2min = parseInt(document.getElementById('term-2-min').value);
   let term2max = parseInt(document.getElementById('term-2-max').value);
 
-  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max, mode);
+  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max, mode, difficulty);
   game.startGame();
   game.timeExpired = resetGame;
   onkeydown = game.onkeydown;
@@ -93,6 +95,14 @@ const findSelectedMode = () => {
   for (const mode of modeRadioButtons) {
     if (mode.checked) {
       return mode.value;
+    }
+  }
+}
+
+const findSelectedDifficulty = () => {
+  for (const difficulty of difficultyRadioButtons) {
+    if (difficulty.checked) {
+      return difficulty.value;
     }
   }
 }

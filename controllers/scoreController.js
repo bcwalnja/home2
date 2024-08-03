@@ -1,9 +1,10 @@
 class ScoreController {
-    constructor(context) {
+    constructor(context, multiplier) {
         log('ScoreController instantiated');
         this.score = 0;
         this.fontSize = Math.floor(context.canvas.height / 20);
         this.context = context;
+        this.multiplier = multiplier;
 
         this.attempts = 0;
     }
@@ -20,7 +21,7 @@ class ScoreController {
       if (this.attempts === 0) {
         return 0;
       }
-      var percent = this.score / this.attempts * 100;
+      var percent = this.score / this.attempts * this.multiplier;
       return Math.round(this.score * percent);
     }
 

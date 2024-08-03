@@ -10,13 +10,13 @@ class QuestionController {
 
     switch (difficulty) {
       case 'medium':
-      this.fallSpeed = canvas.height * .003;
+      this.fallSpeed = canvas.height * .0017;
       break;
       case 'hard':
-      this.fallSpeed = canvas.height * .005;
+      this.fallSpeed = canvas.height * .003;
       break;
       default:
-      this.fallSpeed = canvas.height * .0017;
+      this.fallSpeed = canvas.height * .001;
       break;
     }
 

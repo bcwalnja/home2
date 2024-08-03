@@ -5,7 +5,7 @@ class Game {
   username;
   operation;
 
-  constructor(canvas, username, operation, term1min, term1max, term2min, term2max, mode) {
+  constructor(canvas, username, operation, term1min, term1max, term2min, term2max, mode, difficulty) {
     this.canvas = canvas;
     this.canvas.textBaseline = 'top';
     this.canvas.textAlign = 'center';
@@ -27,11 +27,25 @@ class Game {
     this.term2max = term2max;
 
     this.mode = mode;
+
     if (this.mode === 'keyboard') {
       this.keyboardController = new KeyboardController(this.context);
       this.keyboardController.emitAnswer = this.onKeyboardAnswer;
     } else {
       this.canvas.onclick = this.onCanvasClick;
+    }
+
+    this.difficulty = difficulty;
+
+    if (this.difficulty === 'easy') {
+      this.missleFrameCount = 100;
+      this.multiplier = 100;
+    } else if (this.difficulty === 'medium') {
+      this.missleFrameCount = 80;
+      this.multiplier = 125;
+    } else if (this.difficulty === 'hard') {
+      this.missleFrameCount = 60;
+      this.multiplier = 150;
     }
   }
 
@@ -76,13 +90,13 @@ class Game {
   }
 
   startGame() {
-    this.questionController = new QuestionController(this.context, this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
+    this.questionController = new QuestionController(this.context, this.operation, this.term1min, this.term1max, this.term2min, this.term2max, this.difficulty);
     this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
-    this.missileController = new MissileController(this.context);
+    this.missileController = new MissileController(this.context, this.missleFrameCount);
     this.timeController = new TimeController();
-    this.scoreController = new ScoreController(this.context);
+    this.scoreController = new ScoreController(this.context, this.multiplier);
     this.newQuestion();
 
     this.animate();
@@ -153,7 +167,7 @@ class Game {
       if (!attempts) {
         return 0;
       }
-      var percent = score / attempts * 100;
+      var percent = score / attempts * this.multiplier;
       return Math.round(score * percent);
     }
 
@@ -175,9 +189,12 @@ class Game {
 
     localStorage.setItem('scores', JSON.stringify(scores));
 
-    let accuracy = Math.round(score / attempts * 100) || 0;
+    let accuracy = score && attempts ? Math.round(score / attempts * 100) : 0;
     let scoretext = this.username + '\'s Score: ';
-    scoretext += score + ' Correct, ' + accuracy + '% Accuracy,  ';
+    scoretext += score + ' Correct, '
+    scoretext += accuracy + '% Accuracy,  ';
+    //multiplier
+    scoretext += this.multiplier + ' Difficulty Multiplier, ';
     scoretext += 'Total: ' + value(score, attempts);
     let highscoretext = this.username + '\'s High Score: ' + value(highScore.score, highScore.attempts);
     let x = this.canvas.width / 2;
