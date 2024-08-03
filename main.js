@@ -3,7 +3,8 @@ additionControls = document.getElementById('addition-control-container');
 startButton = document.getElementById('start-button');
 resetButton = document.getElementById('reset-button');
 multiplicationControls = document.getElementById('multiplication-control-container');
-radioButtons = document.querySelectorAll('input[name="operation"]');
+operationRadioButtons = document.querySelectorAll('input[name="operation"]');
+modeRadioButtons = document.querySelectorAll('input[name="mode"]');
 allInputs = document.querySelectorAll('input');
 allControlsContainer = document.getElementById('all-controls-container');
 canvas = document.getElementById('game-canvas');
@@ -40,8 +41,10 @@ const onStartClicked = () => {
     input.disabled = true;
   }
 
-  const operation = findSelectedOperation();
+  let operation = findSelectedOperation();
   log('selected operation:', operation);
+
+  let mode = findSelectedMode();
 
   //get username and term values from controls
   let username = document.getElementById('name').value;
@@ -50,9 +53,10 @@ const onStartClicked = () => {
   let term2min = parseInt(document.getElementById('term-2-min').value);
   let term2max = parseInt(document.getElementById('term-2-max').value);
 
-  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max);
+  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max, mode);
   game.startGame();
   game.timeExpired = resetGame;
+  onkeydown = game.onkeydown;
 }
 
 const resetGame = () => {
@@ -65,14 +69,24 @@ const resetGame = () => {
   for (const input of allInputs) {
     input.disabled = false;
   }
+  onkeydown = null;
+  game = null;
 }
 
 const onResetClicked = resetGame;
 
 const findSelectedOperation = () => {
-  for (const operation of radioButtons) {
+  for (const operation of operationRadioButtons) {
     if (operation.checked) {
       return operation.value;
+    }
+  }
+}
+
+const findSelectedMode = () => {
+  for (const mode of modeRadioButtons) {
+    if (mode.checked) {
+      return mode.value;
     }
   }
 }

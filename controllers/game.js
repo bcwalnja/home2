@@ -5,9 +5,8 @@ class Game {
   username;
   operation;
 
-  constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
+  constructor(canvas, username, operation, term1min, term1max, term2min, term2max, mode) {
     this.canvas = canvas;
-    this.canvas.onclick = this.onCanvasClick;
     this.canvas.textBaseline = 'top';
     this.canvas.textAlign = 'center';
 
@@ -26,6 +25,14 @@ class Game {
     this.term1max = term1max;
     this.term2min = term2min;
     this.term2max = term2max;
+
+    this.mode = mode;
+    if (this.mode === 'keyboard') {
+      this.keyboardController = new KeyboardController(this.context);
+      this.keyboardController.emitAnswer = this.onKeyboardAnswer;
+    } else {
+      this.canvas.onclick = this.onCanvasClick;
+    }
   }
 
   onCanvasClick = (event) => {
@@ -42,13 +49,30 @@ class Game {
       this.missileController.addMissile(source, target, isCorrectAnswer);
       this.scoreController.incrementAttempts();
       if (isCorrectAnswer) {
-        this.questionController.generateNewQuestion(this.questionCoordinates);
-        this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+        this.newQuestion();
       } else {
         this.answerController.removeAnswer(answer);
       }
     }
     this.explosionController.createExplosion(x, y);
+  }
+
+  onkeydown = (event) => {
+    if (this.mode === 'keyboard') {
+      this.keyboardController?.handleKeyPress(event);
+    }
+  }
+
+  onKeyboardAnswer = (text, x, y) => {
+    log('keyboard answer:', text);
+    let source = { text: text, x: x, y: y };
+    let target = this.questionController.getFocusedQuestion();
+    let isCorrectAnswer = text == this.questionController.getCorrectAnswer();
+    this.missileController.addMissile(source, target, isCorrectAnswer);
+    this.scoreController.incrementAttempts();
+    if (isCorrectAnswer) {
+      this.newQuestion();
+    }
   }
 
   startGame() {
@@ -59,9 +83,8 @@ class Game {
     this.missileController = new MissileController(this.context);
     this.timeController = new TimeController();
     this.scoreController = new ScoreController(this.context);
+    this.newQuestion();
 
-    this.questionController.generateNewQuestion(this.questionCoordinates);
-    this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     this.animate();
   }
 
@@ -75,7 +98,11 @@ class Game {
     this.handleQuestionAnswered();
 
     this.questionController.renderQuestions(this.context);
-    this.answerController.renderAnswers(this.context);
+    if (this.mode === 'keyboard') {
+      this.keyboardController.renderText(this.context);
+    } else {
+      this.answerController.renderAnswers(this.context);
+    }
     this.explosionController.renderExplosions();
     this.missileController.renderMissiles();
     this.timeController.renderTime(this.context);
@@ -109,9 +136,15 @@ class Game {
       if (this.missileController.missiles.length > 0) {
         this.missileController.removeMissile();
       } else {
-        this.questionController.generateNewQuestion(this.questionCoordinates);
-        this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+        this.newQuestion();
       }
+    }
+  }
+
+  newQuestion() {
+    this.questionController.generateNewQuestion(this.questionCoordinates);
+    if (this.mode !== 'keyboard') {
+      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     }
   }
 
@@ -142,8 +175,9 @@ class Game {
 
     localStorage.setItem('scores', JSON.stringify(scores));
 
+    let accuracy = Math.round(score / attempts * 100) || 0;
     let scoretext = this.username + '\'s Score: ';
-    scoretext += score + ' Correct, ' + Math.round(score / attempts * 100) + '% Accuracy,  ';
+    scoretext += score + ' Correct, ' + accuracy + '% Accuracy,  ';
     scoretext += 'Total: ' + value(score, attempts);
     let highscoretext = this.username + '\'s High Score: ' + value(highScore.score, highScore.attempts);
     let x = this.canvas.width / 2;
