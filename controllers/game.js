@@ -161,7 +161,7 @@ class Game {
     let score = this.scoreController.score;
 
     let scores = JSON.parse(localStorage.getItem('scores')) || [];
-    let highScore = scores.find(s => s.username === this.username);
+    let highScore = scores.find(s => s.username.toLowerCase() === this.username.toLowerCase());
 
     if (highScore) {
       if (this.scoreController.getScoreValue() > value(highScore.score, highScore.attempts)) {
