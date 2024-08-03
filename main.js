@@ -8,6 +8,7 @@ modeRadioButtons = document.querySelectorAll('input[name="mode"]');
 allInputs = document.querySelectorAll('input');
 allControlsContainer = document.getElementById('all-controls-container');
 canvas = document.getElementById('game-canvas');
+playerName = document.getElementById('name');
 explosionDuration = 2000;
 game = null;
 
@@ -26,6 +27,11 @@ const init = () => {
   window.addEventListener('resize', resizeCanvas);
 
   resizeCanvas();
+
+  let player = localStorage.getItem('player');
+  if (player) {
+    playerName.value = player;
+  }
 }
 
 const resizeCanvas = () => {
@@ -46,8 +52,8 @@ const onStartClicked = () => {
 
   let mode = findSelectedMode();
 
-  //get username and term values from controls
-  let username = document.getElementById('name').value;
+  let username = playerName.value;
+  localStorage.setItem('player', username);
   let term1min = parseInt(document.getElementById('term-1-min').value);
   let term1max = parseInt(document.getElementById('term-1-max').value);
   let term2min = parseInt(document.getElementById('term-2-min').value);
