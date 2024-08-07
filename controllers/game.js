@@ -36,6 +36,8 @@ class Game {
       this.canvas.onclick = this.onCanvasClick;
     }
 
+    this.dadMode = this.username.toLowerCase() == "dad";
+
     this.difficulty = difficulty;
 
     if (this.difficulty === 'easy') {
@@ -92,7 +94,7 @@ class Game {
 
   startGame() {
     this.questionController = new QuestionController(this.context, this.operation, this.term1min, this.term1max, this.term2min, this.term2max, this.difficulty);
-    this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
+    this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max, this.dadMode);
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
     this.missileController = new MissileController(this.context, this.missleFrameCount);

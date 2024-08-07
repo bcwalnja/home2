@@ -1,12 +1,13 @@
 class AnswerController {
   answers = [];
 
-  constructor(operation, term1Min, term1Max, term2Min, term2Max) {
+  constructor(operation, term1Min, term1Max, term2Min, term2Max, isDadMode) {
     this.operation = operation;
     this.term1Min = term1Min;
     this.term1Max = term1Max;
     this.term2Min = term2Min;
     this.term2Max = term2Max;
+    this.isDadMode = isDadMode;
   }
 
   generateNewAnswers(canvas, correctAnswer) {
@@ -45,7 +46,9 @@ class AnswerController {
 
     this.answers = [a1, a2, a3, a4];
 
-    if (!this.answers.some(x => x.text == correctAnswer)) {
+    if (this.isDadMode) {
+      this.answers[2].text = correctAnswer;
+    } else if (!this.answers.some(x => x.text == correctAnswer)) {
       this.answers[rand(0, 3)].text = correctAnswer;
     }
   }
