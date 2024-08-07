@@ -5,9 +5,8 @@ class Game {
   username;
   operation;
 
-  constructor(canvas, username, operation, term1min, term1max, term2min, term2max, gameLength) {
+  constructor(canvas, username, operation, term1min, term1max, term2min, term2max, mode, difficulty, gameLength) {
     this.canvas = canvas;
-    this.canvas.onclick = this.onCanvasClick;
     this.canvas.textBaseline = 'top';
     this.canvas.textAlign = 'center';
 
@@ -28,6 +27,27 @@ class Game {
     this.term2max = term2max;
 
     this.gameLength = gameLength;
+    this.mode = mode;
+
+    if (this.mode === 'keyboard') {
+      this.keyboardController = new KeyboardController(this.context);
+      this.keyboardController.emitAnswer = this.onKeyboardAnswer;
+    } else {
+      this.canvas.onclick = this.onCanvasClick;
+    }
+
+    this.difficulty = difficulty;
+
+    if (this.difficulty === 'easy') {
+      this.missleFrameCount = 100;
+      this.multiplier = 100;
+    } else if (this.difficulty === 'medium') {
+      this.missleFrameCount = 80;
+      this.multiplier = 125;
+    } else if (this.difficulty === 'hard') {
+      this.missleFrameCount = 60;
+      this.multiplier = 150;
+    }
   }
 
   onCanvasClick = (event) => {
@@ -44,8 +64,7 @@ class Game {
       this.missileController.addMissile(source, target, isCorrectAnswer);
       this.scoreController.incrementAttempts();
       if (isCorrectAnswer) {
-        this.questionController.generateNewQuestion(this.questionCoordinates);
-        this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+        this.newQuestion();
       } else {
         this.answerController.removeAnswer(answer);
       }
@@ -53,17 +72,34 @@ class Game {
     this.explosionController.createExplosion(x, y);
   }
 
+  onkeydown = (event) => {
+    if (this.mode === 'keyboard') {
+      this.keyboardController?.handleKeyPress(event);
+    }
+  }
+
+  onKeyboardAnswer = (text, x, y) => {
+    log('keyboard answer:', text);
+    let source = { text: text, x: x, y: y };
+    let target = this.questionController.getFocusedQuestion();
+    let isCorrectAnswer = text == this.questionController.getCorrectAnswer();
+    this.missileController.addMissile(source, target, isCorrectAnswer);
+    this.scoreController.incrementAttempts();
+    if (isCorrectAnswer) {
+      this.newQuestion();
+    }
+  }
+
   startGame() {
-    this.questionController = new QuestionController(this.context, this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
+    this.questionController = new QuestionController(this.context, this.operation, this.term1min, this.term1max, this.term2min, this.term2max, this.difficulty);
     this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
     this.missileController = new MissileController(this.context);
     this.timeController = new TimeController(this.context, this.gameLength);
-    this.scoreController = new ScoreController(this.context);
+    this.scoreController = new ScoreController(this.context, this.multiplier);
+    this.newQuestion();
 
-    this.questionController.generateNewQuestion(this.questionCoordinates);
-    this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     this.animate();
   }
 
@@ -77,7 +113,11 @@ class Game {
     this.handleQuestionAnswered();
 
     this.questionController.renderQuestions(this.context);
-    this.answerController.renderAnswers(this.context);
+    if (this.mode === 'keyboard') {
+      this.keyboardController.renderText(this.context);
+    } else {
+      this.answerController.renderAnswers(this.context);
+    }
     this.explosionController.renderExplosions();
     this.missileController.renderMissiles();
     this.timeController.renderTime(this.context);
@@ -111,9 +151,15 @@ class Game {
       if (this.missileController.missiles.length > 0) {
         this.missileController.removeMissile();
       } else {
-        this.questionController.generateNewQuestion(this.questionCoordinates);
-        this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
+        this.newQuestion();
       }
+    }
+  }
+
+  newQuestion() {
+    this.questionController.generateNewQuestion(this.questionCoordinates);
+    if (this.mode !== 'keyboard') {
+      this.answerController.generateNewAnswers(this.canvas, this.questionController.getCorrectAnswer());
     }
   }
 
@@ -122,7 +168,7 @@ class Game {
       if (!attempts) {
         return 0;
       }
-      var percent = score / attempts * 100;
+      var percent = score / attempts * this.multiplier;
       return Math.round(score * percent);
     }
 
@@ -130,7 +176,7 @@ class Game {
     let score = this.scoreController.score;
 
     let scores = JSON.parse(localStorage.getItem('scores')) || [];
-    let highScore = scores.find(s => s.username === this.username);
+    let highScore = scores.find(s => s.username.toLowerCase() === this.username.toLowerCase());
 
     if (highScore) {
       if (this.scoreController.getScoreValue() > value(highScore.score, highScore.attempts)) {
@@ -144,8 +190,12 @@ class Game {
 
     localStorage.setItem('scores', JSON.stringify(scores));
 
+    let accuracy = score && attempts ? Math.round(score / attempts * 100) : 0;
     let scoretext = this.username + '\'s Score: ';
-    scoretext += score + ' Correct, ' + Math.round(score / attempts * 100) + '% Accuracy,  ';
+    scoretext += score + ' Correct, '
+    scoretext += accuracy + '% Accuracy,  ';
+    //multiplier
+    scoretext += this.multiplier + ' Difficulty Multiplier, ';
     scoretext += 'Total: ' + value(score, attempts);
     let highscoretext = this.username + '\'s High Score: ' + value(highScore.score, highScore.attempts);
     let x = this.canvas.width / 2;

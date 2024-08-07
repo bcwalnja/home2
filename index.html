@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="style.css">
 
 <head>
-  <title>Nate's Page</title>
+  <title>The Math Game</title>
 </head>
 
 <body>
@@ -18,22 +18,38 @@
     </div>
 
     <div>
-      <input type="radio" id="addition" name="operation" value="addition" checked>
-      <label for="addition">Addition</label>
-      <input type="radio" id="subtraction" name="operation" value="subtraction">
-      <label for="subtraction">Subtraction</label>
-      <input type="radio" id="multiplication" name="operation" value="multiplication">
+      <input type="radio" id="multiplication" name="operation" value="multiplication" checked>
       <label for="multiplication">Multiplication</label>
       <input type="radio" id="division" name="operation" value="division">
       <label for="division">Division</label>
+      <input type="radio" id="addition" name="operation" value="addition">
+      <label for="addition">Addition</label>
+      <input type="radio" id="subtraction" name="operation" value="subtraction">
+      <label for="subtraction">Subtraction</label>
     </div>
 
     <div>
+      <input type="radio" id="easy" name="difficulty" value="easy" checked>
+      <label for="easy">Easy</label>
+      <input type="radio" id="medium" name="difficulty" value="medium">
+      <label for="medium">Medium</label>
+      <input type="radio" id="hard" name="difficulty" value="hard">
+      <label for="hard">Hard</label>
+    </div>
+
+    <div>
+      <input type="radio" id="mouse-mode" name="mode" value="mouse" checked>
+      <label for="mouse-mode" title="Use the mouse to answer questions.">Mouse Mode</label>
+      <input type="radio" id="keyboard-mode" name="mode" value="keyboard">
+      <label for="keyboard-mode" title="Use the keyboard to answer questions.">Keyboard Mode</label>
+    </div>
+
+    <!-- <div>
       <input type="radio" id="speed-mode" name="mode" value="speed" checked>
       <label for="speed-mode" title="A new question generates each time the previous one is answered.">Speed Mode</label>
       <input type="radio" id="swarm-mode" name="mode" value="swarm">
       <label for="swarm-mode" title="A new question is generated every second.">Swarm Mode</label>
-    </div>
+    </div> -->
 
     <div>
       <label for="term-1-min">Term 1 Min:</label>
@@ -80,5 +96,6 @@
 <script src="controllers/explosionController.js"></script>
 <script src="controllers/timeController.js"></script>
 <script src="controllers/scoreController.js"></script>
+<script src="controllers/keyboardController.js"></script>
 
 </html>
