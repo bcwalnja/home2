@@ -95,7 +95,7 @@ class Game {
     this.answerController = new AnswerController(this.operation, this.term1min, this.term1max, this.term2min, this.term2max);
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
-    this.missileController = new MissileController(this.context);
+    this.missileController = new MissileController(this.context, this.missleFrameCount);
     this.timeController = new TimeController(this.context, this.gameLength);
     this.scoreController = new ScoreController(this.context, this.multiplier);
     this.newQuestion();
