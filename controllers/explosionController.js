@@ -1,6 +1,7 @@
 class ExplosionController {
   constructor(context) {
     this.context = context;
+    this.explosionDuration = 7000;
     this.explosions = [];
   }
 
@@ -30,7 +31,7 @@ class ExplosionController {
     this.explosions.forEach(explosion => {
       if (!explosion.points) {
         return;
-      } else if (now - explosion.startTime > explosionDuration) {
+      } else if (now - explosion.startTime > this.explosionDuration) {
         this.removeExplosion();
         return;
       } else {
@@ -42,6 +43,7 @@ class ExplosionController {
 
 class Explosion {
   constructor(context, x, y, color) {
+    this.explosionDuration = 7000;
     this.context = context;
     this.x = x;
     this.y = y;
@@ -74,18 +76,24 @@ class Explosion {
 
   draw() {
     var timeRemaining = Date.now() - this.startTime;
-    var remaining = 1 - timeRemaining / explosionDuration;
+    var remaining = 1 - timeRemaining / this.explosionDuration;
     var r = Math.ceil(255 * remaining).toString(16).padStart(2, '0');
     var g = Math.ceil(255 * remaining * this.ratio).toString(16).padStart(2, '0');
     var color = '#' + r + g + '00';
 
-    this.points.forEach(point => {
-      this.context.save();
-      point.x += point.dx;
-      point.y += point.dy;
-      this.context.fillStyle = color;
-      this.context.fillRect(point.x, point.y, 2, 2);
-      this.context.restore();
-    });
+    for (let i = this.points.length - 1; i >= 0; i--) {
+      //if point is outside canvas, remove it
+      let p = this.points[i];
+      if (p.x < 0 || p.x > this.context.canvas.width || p.y < 0 || p.y > this.context.canvas.height) {
+        this.points.splice(i, 1);
+      } else {
+        this.context.save();
+        p.x += p.dx;
+        p.y += p.dy;
+        this.context.fillStyle = color;
+        this.context.fillRect(p.x, p.y, 2, 2);
+        this.context.restore();
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@ class Game {
   username;
   operation;
 
-  constructor(canvas, username, operation, term1min, term1max, term2min, term2max) {
+  constructor(canvas, username, operation, term1min, term1max, term2min, term2max, gameLength) {
     this.canvas = canvas;
     this.canvas.onclick = this.onCanvasClick;
     this.canvas.textBaseline = 'top';
@@ -26,6 +26,8 @@ class Game {
     this.term1max = term1max;
     this.term2min = term2min;
     this.term2max = term2max;
+
+    this.gameLength = gameLength;
   }
 
   onCanvasClick = (event) => {
@@ -57,7 +59,7 @@ class Game {
     this.clickController = new ClickController(this.context);
     this.explosionController = new ExplosionController(this.context);
     this.missileController = new MissileController(this.context);
-    this.timeController = new TimeController();
+    this.timeController = new TimeController(this.context, this.gameLength);
     this.scoreController = new ScoreController(this.context);
 
     this.questionController.generateNewQuestion(this.questionCoordinates);

@@ -5,11 +5,12 @@ function rand(min, max) {
   if (min == max) {
     return min;
   }
+  max += 1;
   let mean = (max + min) / 2;
   let range = max - min;
   let seed = Math.random() - 0.5;
   let result = mean + seed * range;
-  return Math.round(result);
+  return Math.floor(result);
 }
 
 function log(...msg) {

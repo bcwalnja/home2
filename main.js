@@ -7,7 +7,7 @@ radioButtons = document.querySelectorAll('input[name="operation"]');
 allInputs = document.querySelectorAll('input');
 allControlsContainer = document.getElementById('all-controls-container');
 canvas = document.getElementById('game-canvas');
-explosionDuration = 2000;
+gameLength = document.getElementById('game-length');
 game = null;
 
 // by making all the methods lambda functions, 
@@ -43,14 +43,15 @@ const onStartClicked = () => {
   const operation = findSelectedOperation();
   log('selected operation:', operation);
 
-  //get username and term values from controls
   let username = document.getElementById('name').value;
   let term1min = parseInt(document.getElementById('term-1-min').value);
   let term1max = parseInt(document.getElementById('term-1-max').value);
   let term2min = parseInt(document.getElementById('term-2-min').value);
   let term2max = parseInt(document.getElementById('term-2-max').value);
 
-  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max);
+  let gameLengthValue = parseInt(gameLength.value);
+
+  game = new Game(canvas, username, operation, term1min, term1max, term2min, term2max, gameLengthValue);
   game.startGame();
   game.timeExpired = resetGame;
 }

@@ -1,21 +1,18 @@
 class TimeController {
-  constructor() {
+  constructor(context, gameLength) {
     log('TimeController instantiated');
     this.startTime = Date.now();
-    // TODO: maybe allow the user to set the game length?
-    this.gameLength = 6;
+    this.context = context;
+    this.gameLength = gameLength || 60;
+    this.fontSize = Math.floor(context.canvas.height / 20);
   }
 
-  renderTime(context) {
-    if (!this.fontSize) {
-      this.fontSize = Math.floor(context.canvas.height / 20);
-    }
-    
-    context.save();
-    context.textAlign = 'left';
-    context.textBaseline = 'top';
-    context.fillText(this.getTimeRemaining(), this.fontSize, this.fontSize);
-    context.restore();
+  renderTime() {
+    this.context.save();
+    this.context.textAlign = 'left';
+    this.context.textBaseline = 'top';
+    this.context.fillText(this.getTimeRemaining(), this.fontSize, this.fontSize);
+    this.context.restore();
   }
 
   getTimeRemaining() {
