@@ -5,7 +5,7 @@ class TimeController {
     this.context = context;
     this.gameLength = gameLength || 60;
     this.fontSize = Math.floor(context.canvas.height / 20);
-    this.gameLength = 120;
+    this.gameLength = gameLength;
   }
 
   renderTime() {
